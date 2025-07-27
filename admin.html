@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-button.active {
+            background-color: #3B82F6;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div id="login-section" class="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md text-center">
+            <h2 class="text-3xl font-bold mb-6 text-gray-900">Admin Login</h2>
+            <input type="email" id="login-email" placeholder="Email" class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            <input type="password" id="login-password" placeholder="Password" class="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            <button id="login-btn" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-lg">Login</button>
+            <p id="login-message" class="text-red-500 mt-4"></p>
+        </div>
+    </div>
+
+    <div id="admin-panel-section" class="hidden min-h-screen flex flex-col">
+        <header class="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+            <div class="flex items-center space-x-4">
+                <span id="admin-email-display" class="font-medium"></span>
+                <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
+            </div>
+        </header>
+
+        <div class="flex-1 flex flex-col md:flex-row">
+            <aside class="w-full md:w-64 bg-gray-800 p-4 text-white">
+                <nav class="space-y-2">
+                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200 active" data-tab="tools">Tools</button>
+                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="features">Features</button>
+                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="faqs">FAQs</button>
+                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="testimonials">Testimonials</button>
+                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="about">About Us</button>
+                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="contactInfo">Contact Info</button>
+                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="contactSubmissions">Contact Submissions</button>
+                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="newsletterSubscriptions">Newsletter Subs</button>
+                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="announcement">Announcement</button>
+                </nav>
+            </aside>
+
+            <main class="flex-1 p-6 bg-gray-100">
+                <div id="tools-tab" class="tab-content active-tab">
+                    <h2 class="text-3xl font-bold mb-6">Manage AI Tools</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Add/Edit Tool</h3>
+                        <input type="hidden" id="tool-id">
+                        <input type="text" id="tool-title" placeholder="Tool Title" class="w-full p-2 mb-3 border rounded-lg">
+                        <textarea id="tool-description" placeholder="Tool Description" class="w-full p-2 mb-3 border rounded-lg"></textarea>
+                        <input type="text" id="tool-image" placeholder="Image URL (e.g., /assets/tool.png)" class="w-full p-2 mb-3 border rounded-lg">
+                        <input type="text" id="tool-url" placeholder="Launch URL (e.g., https://example.com/tool)" class="w-full p-2 mb-3 border rounded-lg">
+                        <input type="text" id="tool-category" placeholder="Category (e.g., writing, design)" class="w-full p-2 mb-3 border rounded-lg">
+                        <input type="text" id="tool-iframeUrl" placeholder="iFrame URL (Optional)" class="w-full p-2 mb-3 border rounded-lg">
+                        <input type="text" id="tool-features" placeholder="Features (comma separated, e.g., Feature 1, Feature 2)" class="w-full p-2 mb-3 border rounded-lg">
+                        <div class="flex space-x-4">
+                            <button id="save-tool-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Tool</button>
+                            <button id="clear-tool-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Existing Tools</h3>
+                        <div id="tools-list" class="space-y-4">
+                            <p class="text-center text-gray-500">Loading tools...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="features-tab" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6">Manage Features</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Add/Edit Feature</h3>
+                        <input type="hidden" id="feature-id">
+                        <input type="text" id="feature-title" placeholder="Feature Title" class="w-full p-2 mb-3 border rounded-lg">
+                        <textarea id="feature-description" placeholder="Feature Description" class="w-full p-2 mb-3 border rounded-lg"></textarea>
+                        <input type="text" id="feature-icon" placeholder="Icon (e.g., ✨ or /assets/icon.svg)" class="w-full p-2 mb-3 border rounded-lg">
+                        <div class="flex space-x-4">
+                            <button id="save-feature-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Feature</button>
+                            <button id="clear-feature-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Existing Features</h3>
+                        <div id="features-list" class="space-y-4">
+                            <p class="text-center text-gray-500">Loading features...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="faqs-tab" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6">Manage FAQs</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Add/Edit FAQ</h3>
+                        <input type="hidden" id="faq-id">
+                        <input type="text" id="faq-question" placeholder="Question" class="w-full p-2 mb-3 border rounded-lg">
+                        <textarea id="faq-answer" placeholder="Answer" class="w-full p-2 mb-3 border rounded-lg"></textarea>
+                        <div class="flex space-x-4">
+                            <button id="save-faq-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save FAQ</button>
+                            <button id="clear-faq-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Existing FAQs</h3>
+                        <div id="faqs-list" class="space-y-4">
+                            <p class="text-center text-gray-500">Loading FAQs...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="testimonials-tab" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6">Manage Testimonials</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Add/Edit Testimonial</h3>
+                        <input type="hidden" id="testimonial-id">
+                        <input type="text" id="testimonial-name" placeholder="Author Name" class="w-full p-2 mb-3 border rounded-lg">
+                        <textarea id="testimonial-quote" placeholder="Testimonial Quote" class="w-full p-2 mb-3 border rounded-lg"></textarea>
+                        <div class="flex space-x-4">
+                            <button id="save-testimonial-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Testimonial</button>
+                            <button id="clear-testimonial-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Existing Testimonials</h3>
+                        <div id="testimonials-list" class="space-y-4">
+                            <p class="text-center text-gray-500">Loading testimonials...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="about-tab" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6">Manage About Us Page</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Mission & Story</h3>
+                        <label for="about-mission" class="block text-lg font-medium text-gray-700 mb-2">Our Mission</label>
+                        <textarea id="about-mission" placeholder="Our company mission" class="w-full p-2 mb-3 border rounded-lg"></textarea>
+                        <label for="about-story" class="block text-lg font-medium text-gray-700 mb-2">Our Story</label>
+                        <textarea id="about-story" placeholder="Our company story" class="w-full p-2 mb-3 border rounded-lg"></textarea>
+                        <button id="save-about-text-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Text</button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Manage Team Members</h3>
+                        <input type="hidden" id="team-member-id">
+                        <input type="text" id="team-member-name" placeholder="Member Name" class="w-full p-2 mb-3 border rounded-lg">
+                        <input type="text" id="team-member-role" placeholder="Member Role" class="w-full p-2 mb-3 border rounded-lg">
+                        <input type="text" id="team-member-image" placeholder="Image URL (e.g., /assets/team-alice.jpg)" class="w-full p-2 mb-3 border rounded-lg">
+                        <div class="flex space-x-4">
+                            <button id="save-team-member-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Member</button>
+                            <button id="clear-team-member-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
+                        </div>
+                        <div id="team-members-list" class="space-y-4 mt-6">
+                            <p class="text-center text-gray-500">Loading team members...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="contactInfo-tab" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6">Manage Contact Information</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <label for="contact-email" class="block text-lg font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" id="contact-email" placeholder="Contact Email" class="w-full p-2 mb-3 border rounded-lg">
+                        <label for="contact-phone" class="block text-lg font-medium text-gray-700 mb-2">Phone</label>
+                        <input type="tel" id="contact-phone" placeholder="Contact Phone" class="w-full p-2 mb-3 border rounded-lg">
+                        <label for="contact-address" class="block text-lg font-medium text-gray-700 mb-2">Address</label>
+                        <textarea id="contact-address" placeholder="Company Address" class="w-full p-2 mb-3 border rounded-lg"></textarea>
+                        <h3 class="text-xl font-semibold mt-4 mb-2">Social Media Links</h3>
+                        <input type="url" id="social-facebook" placeholder="Facebook URL" class="w-full p-2 mb-3 border rounded-lg">
+                        <input type="url" id="social-twitter" placeholder="Twitter URL" class="w-full p-2 mb-3 border rounded-lg">
+                        <input type="url" id="social-linkedin" placeholder="LinkedIn URL" class="w-full p-2 mb-3 border rounded-lg">
+                        <button id="save-contact-info-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Contact Info</button>
+                    </div>
+                </div>
+
+                <div id="contactSubmissions-tab" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6">Contact Form Submissions</h2>
+                    <div id="contact-submissions-list" class="bg-white p-6 rounded-lg shadow-md">
+                        <p class="text-center text-gray-500">Loading submissions...</p>
+                    </div>
+                </div>
+
+                <div id="newsletterSubscriptions-tab" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6">Newsletter Subscriptions</h2>
+                    <div id="newsletter-subscriptions-list" class="bg-white p-6 rounded-lg shadow-md">
+                        <p class="text-center text-gray-500">Loading subscriptions...</p>
+                    </div>
+                </div>
+
+                <div id="announcement-tab" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6">Manage Announcement Banner</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="mb-4">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" id="announcement-active" class="form-checkbox h-5 w-5 text-blue-600">
+                                <span class="ml-2 text-gray-700 font-medium">Activate Announcement</span>
+                            </label>
+                        </div>
+                        <label for="announcement-message" class="block text-lg font-medium text-gray-700 mb-2">Announcement Message</label>
+                        <textarea id="announcement-message" placeholder="Type your announcement here..." class="w-full p-2 mb-3 border rounded-lg"></textarea>
+                        <button id="save-announcement-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Announcement</button>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+
+        // --- Your Firebase Config ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVpddOtX1yRxslNxh8yz3SJq53eUYhkZ0",
+            authDomain: "next-gen-186aa.firebaseapp.com",
+            projectId: "next-gen-186aa",
+            storageBucket: "next-gen-186aa.firebasestorage.app",
+            messagingSenderId: "338569531164",
+            appId: "1:338569531164:web:932df077b59a0a371b34d9",
+            databaseURL: "https://next-gen-186aa-default-rtdb.firebaseio.com" // Ensure this is your Realtime Database URL
+        };
+        // --- END Firebase Config ---
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        const adminUserUIDs = {
+            "oR3W7e6PDdNeXlFiSrAfOgweO1q2": true, // Super Admin
+            "pApM6CgYy0QJ5rZZQG4wt9JWuj53": true  // Sub Admin
+        };
+
+        const loginSection = document.getElementById('login-section');
+        const adminPanelSection = document.getElementById('admin-panel-section');
+        const loginEmailInput = document.getElementById('login-email');
+        const loginPasswordInput = document.getElementById('login-password');
+        const loginBtn = document.getElementById('login-btn');
+        const loginMessage = document.getElementById('login-message');
+        const logoutBtn = document.getElementById('logout-btn');
+        const adminEmailDisplay = document.getElementById('admin-email-display');
+
+        // Tab Management
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.add('hidden'));
+
+                button.classList.add('active');
+                document.getElementById(`${button.dataset.tab}-tab`).classList.remove('hidden');
+            });
+        });
+
+        // Firebase Auth State Listener
+        onAuthStateChanged(auth, (user) => {
+            if (user && adminUserUIDs[user.uid]) {
+                loginSection.classList.add('hidden');
+                adminPanelSection.classList.remove('hidden');
+                adminEmailDisplay.textContent = user.email;
+                loadAdminData(); // Load data once logged in
+            } else {
+                loginSection.classList.remove('hidden');
+                adminPanelSection.classList.add('hidden');
+                adminEmailDisplay.textContent = '';
+                loginMessage.textContent = ''; // Clear message on logout/no user
+            }
+        });
+
+        // Login Logic
+        loginBtn.addEventListener('click', async () => {
+            const email = loginEmailInput.value;
+            const password = loginPasswordInput.value;
+            loginMessage.textContent = '';
+
+            if (!email || !password) {
+                loginMessage.textContent = 'Please enter both email and password.';
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                if (!adminUserUIDs[userCredential.user.uid]) {
+                    // Log out if not an authorized admin UID, even if login was successful
+                    await signOut(auth);
+                    loginMessage.textContent = 'You are not authorized to access this panel.';
+                }
+            } catch (error) {
+                console.error("Login error:", error);
+                loginMessage.textContent = `Login failed: ${error.message}`;
+            }
+        });
+
+        // Logout Logic
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout error:", error);
+                alert("Logout failed: " + error.message);
+            }
+        });
+
+        // --- Data Management Functions ---
+
+        async function fetchData(path) {
+            return new Promise((resolve, reject) => {
+                const dataRef = ref(database, path);
+                onValue(dataRef, (snapshot) => {
+                    const data = snapshot.val();
+                    resolve(data);
+                }, (error) => {
+                    console.error(`Error fetching data from ${path}:`, error);
+                    reject(error);
+                }, {
+                    onlyOnce: true
+                });
+            });
+        }
+
+        async function saveData(path, data) {
+            try {
+                await set(ref(database, path), data);
+                return true;
+            } catch (error) {
+                console.error(`Error saving data to ${path}:`, error);
+                return false;
+            }
+        }
+
+        async function pushData(path, data) {
+            try {
+                const newRef = push(ref(database, path));
+                await set(newRef, data);
+                return newRef.key;
+            } catch (error) {
+                console.error(`Error pushing data to ${path}:`, error);
+                return null;
+            }
+        }
+
+        async function removeData(path) {
+            try {
+                await remove(ref(database, path));
+                return true;
+            } catch (error) {
+                console.error(`Error removing data from ${path}:`, error);
+                return false;
+            }
+        }
+
+        // --- General UI Utilities ---
+        function clearForm(formInputs) {
+            formInputs.forEach(input => {
+                if (input.type === 'checkbox') {
+                    input.checked = false;
+                } else {
+                    input.value = '';
+                }
+            });
+        }
+
+        // --- Load & Render Functions for Each Tab ---
+
+        async function loadAdminData() {
+            // Load and render data for the currently active tab initially
+            const activeTabButton = document.querySelector('.tab-button.active');
+            if (activeTabButton) {
+                const tabName = activeTabButton.dataset.tab;
+                switch (tabName) {
+                    case 'tools': await loadTools(); break;
+                    case 'features': await loadFeatures(); break;
+                    case 'faqs': await loadFAQs(); break;
+                    case 'testimonials': await loadTestimonials(); break;
+                    case 'about': await loadAbout(); break;
+                    case 'contactInfo': await loadContactInfo(); break;
+                    case 'contactSubmissions': await loadContactSubmissions(); break;
+                    case 'newsletterSubscriptions': await loadNewsletterSubscriptions(); break;
+                    case 'announcement': await loadAnnouncement(); break;
+                    default: console.log("Unknown tab:", tabName);
+                }
+            }
+        }
+
+        // --- Tools Management ---
+        const toolId = document.getElementById('tool-id');
+        const toolTitle = document.getElementById('tool-title');
+        const toolDescription = document.getElementById('tool-description');
+        const toolImage = document.getElementById('tool-image');
+        const toolUrl = document.getElementById('tool-url');
+        const toolCategory = document.getElementById('tool-category');
+        const toolIframeUrl = document.getElementById('tool-iframeUrl');
+        const toolFeatures = document.getElementById('tool-features');
+        const saveToolBtn = document.getElementById('save-tool-btn');
+        const clearToolBtn = document.getElementById('clear-tool-btn');
+        const toolsList = document.getElementById('tools-list');
+
+        async function loadTools() {
+            toolsList.innerHTML = '<p class="text-center text-gray-500">Loading tools...</p>';
+            const tools = await fetchData('tools');
+            toolsList.innerHTML = '';
+            if (tools) {
+                Object.keys(tools).forEach(key => {
+                    const tool = tools[key];
+                    const toolItem = document.createElement('div');
+                    toolItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
+                    toolItem.innerHTML = `
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${tool.title}</h4>
+                            <p class="text-sm text-gray-600">${tool.description}</p>
+                            <p class="text-xs text-gray-500">Category: ${tool.category || 'N/A'}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button data-id="${key}" class="edit-tool-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                            <button data-id="${key}" class="delete-tool-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                        </div>
+                    `;
+                    toolsList.appendChild(toolItem);
+                });
+                document.querySelectorAll('.edit-tool-btn').forEach(button => button.addEventListener('click', editTool));
+                document.querySelectorAll('.delete-tool-btn').forEach(button => button.addEventListener('click', deleteTool));
+            } else {
+                toolsList.innerHTML = '<p class="text-center text-gray-500">No tools found.</p>';
+            }
+        }
+
+        saveToolBtn.addEventListener('click', async () => {
+            const id = toolId.value;
+            const featuresArray = toolFeatures.value.split(',').map(f => f.trim()).filter(f => f !== '');
+            const toolData = {
+                title: toolTitle.value,
+                description: toolDescription.value,
+                image: toolImage.value,
+                url: toolUrl.value,
+                category: toolCategory.value,
+                iframeUrl: toolIframeUrl.value,
+                features: featuresArray.length > 0 ? featuresArray : null
+            };
+
+            let success;
+            if (id) {
+                success = await saveData(`tools/${id}`, toolData);
+            } else {
+                const newId = toolData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '');
+                success = await saveData(`tools/${newId}`, toolData); // Use a slug as ID
+            }
+
+            if (success) {
+                alert('Tool saved successfully!');
+                clearForm([toolId, toolTitle, toolDescription, toolImage, toolUrl, toolCategory, toolIframeUrl, toolFeatures]);
+                loadTools();
+            } else {
+                alert('Failed to save tool.');
+            }
+        });
+
+        clearToolBtn.addEventListener('click', () => {
+            clearForm([toolId, toolTitle, toolDescription, toolImage, toolUrl, toolCategory, toolIframeUrl, toolFeatures]);
+        });
+
+        async function editTool(event) {
+            const id = event.target.dataset.id;
+            const tool = await fetchData(`tools/${id}`);
+            if (tool) {
+                toolId.value = id;
+                toolTitle.value = tool.title || '';
+                toolDescription.value = tool.description || '';
+                toolImage.value = tool.image || '';
+                toolUrl.value = tool.url || '';
+                toolCategory.value = tool.category || '';
+                toolIframeUrl.value = tool.iframeUrl || '';
+                toolFeatures.value = Array.isArray(tool.features) ? tool.features.join(', ') : '';
+                document.getElementById('tools-tab').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        async function deleteTool(event) {
+            const id = event.target.dataset.id;
+            if (confirm('Are you sure you want to delete this tool?')) {
+                const success = await removeData(`tools/${id}`);
+                if (success) {
+                    alert('Tool deleted successfully!');
+                    loadTools();
+                } else {
+                    alert('Failed to delete tool.');
+                }
+            }
+        }
+
+        // --- Features Management ---
+        const featureId = document.getElementById('feature-id');
+        const featureTitle = document.getElementById('feature-title');
+        const featureDescription = document.getElementById('feature-description');
+        const featureIcon = document.getElementById('feature-icon');
+        const saveFeatureBtn = document.getElementById('save-feature-btn');
+        const clearFeatureBtn = document.getElementById('clear-feature-btn');
+        const featuresList = document.getElementById('features-list');
+
+        async function loadFeatures() {
+            featuresList.innerHTML = '<p class="text-center text-gray-500">Loading features...</p>';
+            const features = await fetchData('features');
+            featuresList.innerHTML = '';
+            if (features) {
+                Object.keys(features).forEach(key => {
+                    const feature = features[key];
+                    const featureItem = document.createElement('div');
+                    featureItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
+                    featureItem.innerHTML = `
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${feature.icon} ${feature.title}</h4>
+                            <p class="text-sm text-gray-600">${feature.description}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button data-id="${key}" class="edit-feature-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                            <button data-id="${key}" class="delete-feature-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                        </div>
+                    `;
+                    featuresList.appendChild(featureItem);
+                });
+                document.querySelectorAll('.edit-feature-btn').forEach(button => button.addEventListener('click', editFeature));
+                document.querySelectorAll('.delete-feature-btn').forEach(button => button.addEventListener('click', deleteFeature));
+            } else {
+                featuresList.innerHTML = '<p class="text-center text-gray-500">No features found.</p>';
+            }
+        }
+
+        saveFeatureBtn.addEventListener('click', async () => {
+            const id = featureId.value;
+            const featureData = {
+                title: featureTitle.value,
+                description: featureDescription.value,
+                icon: featureIcon.value
+            };
+
+            let success;
+            if (id) {
+                success = await saveData(`features/${id}`, featureData);
+            } else {
+                const newId = featureData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '');
+                success = await saveData(`features/${newId}`, featureData);
+            }
+
+            if (success) {
+                alert('Feature saved successfully!');
+                clearForm([featureId, featureTitle, featureDescription, featureIcon]);
+                loadFeatures();
+            } else {
+                alert('Failed to save feature.');
+            }
+        });
+
+        clearFeatureBtn.addEventListener('click', () => {
+            clearForm([featureId, featureTitle, featureDescription, featureIcon]);
+        });
+
+        async function editFeature(event) {
+            const id = event.target.dataset.id;
+            const feature = await fetchData(`features/${id}`);
+            if (feature) {
+                featureId.value = id;
+                featureTitle.value = feature.title || '';
+                featureDescription.value = feature.description || '';
+                featureIcon.value = feature.icon || '';
+                document.getElementById('features-tab').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        async function deleteFeature(event) {
+            const id = event.target.dataset.id;
+            if (confirm('Are you sure you want to delete this feature?')) {
+                const success = await removeData(`features/${id}`);
+                if (success) {
+                    alert('Feature deleted successfully!');
+                    loadFeatures();
+                } else {
+                    alert('Failed to delete feature.');
+                }
+            }
+        }
+
+        // --- FAQs Management ---
+        const faqId = document.getElementById('faq-id');
+        const faqQuestion = document.getElementById('faq-question');
+        const faqAnswer = document.getElementById('faq-answer');
+        const saveFaqBtn = document.getElementById('save-faq-btn');
+        const clearFaqBtn = document.getElementById('clear-faq-btn');
+        const faqsList = document.getElementById('faqs-list');
+
+        async function loadFAQs() {
+            faqsList.innerHTML = '<p class="text-center text-gray-500">Loading FAQs...</p>';
+            const faqs = await fetchData('faqs');
+            faqsList.innerHTML = '';
+            if (faqs) {
+                Object.keys(faqs).forEach(key => {
+                    const faq = faqs[key];
+                    const faqItem = document.createElement('div');
+                    faqItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
+                    faqItem.innerHTML = `
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${faq.question}</h4>
+                            <p class="text-sm text-gray-600">${faq.answer}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button data-id="${key}" class="edit-faq-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                            <button data-id="${key}" class="delete-faq-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                        </div>
+                    `;
+                    faqsList.appendChild(faqItem);
+                });
+                document.querySelectorAll('.edit-faq-btn').forEach(button => button.addEventListener('click', editFAQ));
+                document.querySelectorAll('.delete-faq-btn').forEach(button => button.addEventListener('click', deleteFAQ));
+            } else {
+                faqsList.innerHTML = '<p class="text-center text-gray-500">No FAQs found.</p>';
+            }
+        }
+
+        saveFaqBtn.addEventListener('click', async () => {
+            const id = faqId.value;
+            const faqData = {
+                question: faqQuestion.value,
+                answer: faqAnswer.value
+            };
+
+            let success;
+            if (id) {
+                success = await saveData(`faqs/${id}`, faqData);
+            } else {
+                const newId = push(ref(database, 'faqs')).key; // Generate a unique ID
+                success = await saveData(`faqs/${newId}`, faqData);
+            }
+
+            if (success) {
+                alert('FAQ saved successfully!');
+                clearForm([faqId, faqQuestion, faqAnswer]);
+                loadFAQs();
+            } else {
+                alert('Failed to save FAQ.');
+            }
+        });
+
+        clearFaqBtn.addEventListener('click', () => {
+            clearForm([faqId, faqQuestion, faqAnswer]);
+        });
+
+        async function editFAQ(event) {
+            const id = event.target.dataset.id;
+            const faq = await fetchData(`faqs/${id}`);
+            if (faq) {
+                faqId.value = id;
+                faqQuestion.value = faq.question || '';
+                faqAnswer.value = faq.answer || '';
+                document.getElementById('faqs-tab').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        async function deleteFAQ(event) {
+            const id = event.target.dataset.id;
+            if (confirm('Are you sure you want to delete this FAQ?')) {
+                const success = await removeData(`faqs/${id}`);
+                if (success) {
+                    alert('FAQ deleted successfully!');
+                    loadFAQs();
+                } else {
+                    alert('Failed to delete FAQ.');
+                }
+            }
+        }
+
+        // --- Testimonials Management ---
+        const testimonialId = document.getElementById('testimonial-id');
+        const testimonialName = document.getElementById('testimonial-name');
+        const testimonialQuote = document.getElementById('testimonial-quote');
+        const saveTestimonialBtn = document.getElementById('save-testimonial-btn');
+        const clearTestimonialBtn = document.getElementById('clear-testimonial-btn');
+        const testimonialsList = document.getElementById('testimonials-list');
+
+        async function loadTestimonials() {
+            testimonialsList.innerHTML = '<p class="text-center text-gray-500">Loading testimonials...</p>';
+            const testimonials = await fetchData('testimonials');
+            testimonialsList.innerHTML = '';
+            if (testimonials) {
+                Object.keys(testimonials).forEach(key => {
+                    const testimonial = testimonials[key];
+                    const testimonialItem = document.createElement('div');
+                    testimonialItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
+                    testimonialItem.innerHTML = `
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${testimonial.name}</h4>
+                            <p class="text-sm text-gray-600 italic">"${testimonial.quote}"</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button data-id="${key}" class="edit-testimonial-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                            <button data-id="${key}" class="delete-testimonial-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                        </div>
+                    `;
+                    testimonialsList.appendChild(testimonialItem);
+                });
+                document.querySelectorAll('.edit-testimonial-btn').forEach(button => button.addEventListener('click', editTestimonial));
+                document.querySelectorAll('.delete-testimonial-btn').forEach(button => button.addEventListener('click', deleteTestimonial));
+            } else {
+                testimonialsList.innerHTML = '<p class="text-center text-gray-500">No testimonials found.</p>';
+            }
+        }
+
+        saveTestimonialBtn.addEventListener('click', async () => {
+            const id = testimonialId.value;
+            const testimonialData = {
+                name: testimonialName.value,
+                quote: testimonialQuote.value
+            };
+
+            let success;
+            if (id) {
+                success = await saveData(`testimonials/${id}`, testimonialData);
+            } else {
+                const newId = push(ref(database, 'testimonials')).key;
+                success = await saveData(`testimonials/${newId}`, testimonialData);
+            }
+
+            if (success) {
+                alert('Testimonial saved successfully!');
+                clearForm([testimonialId, testimonialName, testimonialQuote]);
+                loadTestimonials();
+            } else {
+                alert('Failed to save testimonial.');
+            }
+        });
+
+        clearTestimonialBtn.addEventListener('click', () => {
+            clearForm([testimonialId, testimonialName, testimonialQuote]);
+        });
+
+        async function editTestimonial(event) {
+            const id = event.target.dataset.id;
+            const testimonial = await fetchData(`testimonials/${id}`);
+            if (testimonial) {
+                testimonialId.value = id;
+                testimonialName.value = testimonial.name || '';
+                testimonialQuote.value = testimonial.quote || '';
+                document.getElementById('testimonials-tab').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        async function deleteTestimonial(event) {
+            const id = event.target.dataset.id;
+            if (confirm('Are you sure you want to delete this testimonial?')) {
+                const success = await removeData(`testimonials/${id}`);
+                if (success) {
+                    alert('Testimonial deleted successfully!');
+                    loadTestimonials();
+                } else {
+                    alert('Failed to delete testimonial.');
+                }
+            }
+        }
+
+        // --- About Us Management ---
+        const aboutMission = document.getElementById('about-mission');
+        const aboutStory = document.getElementById('about-story');
+        const saveAboutTextBtn = document.getElementById('save-about-text-btn');
+
+        const teamMemberId = document.getElementById('team-member-id');
+        const teamMemberName = document.getElementById('team-member-name');
+        const teamMemberRole = document.getElementById('team-member-role');
+        const teamMemberImage = document.getElementById('team-member-image');
+        const saveTeamMemberBtn = document.getElementById('save-team-member-btn');
+        const clearTeamMemberBtn = document.getElementById('clear-team-member-btn');
+        const teamMembersList = document.getElementById('team-members-list');
+
+        async function loadAbout() {
+            const aboutData = await fetchData('about');
+            if (aboutData) {
+                aboutMission.value = aboutData.mission || '';
+                aboutStory.value = aboutData.story || '';
+                renderTeamMembers(aboutData.team);
+            }
+        }
+
+        function renderTeamMembers(team) {
+            teamMembersList.innerHTML = '';
+            if (team && Array.isArray(team)) {
+                team.forEach((member, index) => {
+                    const memberItem = document.createElement('div');
+                    memberItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
+                    memberItem.innerHTML = `
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${member.name}</h4>
+                            <p class="text-sm text-gray-600">${member.role}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button data-index="${index}" class="edit-team-member-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                            <button data-index="${index}" class="delete-team-member-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                        </div>
+                    `;
+                    teamMembersList.appendChild(memberItem);
+                });
+                document.querySelectorAll('.edit-team-member-btn').forEach(button => button.addEventListener('click', editTeamMember));
+                document.querySelectorAll('.delete-team-member-btn').forEach(button => button.addEventListener('click', deleteTeamMember));
+            } else {
+                teamMembersList.innerHTML = '<p class="text-center text-gray-500">No team members found.</p>';
+            }
+        }
+
+        saveAboutTextBtn.addEventListener('click', async () => {
+            const currentAbout = await fetchData('about') || {};
+            const success = await saveData('about', {
+                ...currentAbout,
+                mission: aboutMission.value,
+                story: aboutStory.value
+            });
+            if (success) {
+                alert('About text saved successfully!');
+            } else {
+                alert('Failed to save about text.');
+            }
+        });
+
+        saveTeamMemberBtn.addEventListener('click', async () => {
+            const currentAbout = await fetchData('about') || {};
+            const team = currentAbout.team || [];
+            const newMember = {
+                name: teamMemberName.value,
+                role: teamMemberRole.value,
+                image: teamMemberImage.value
+            };
+
+            const id = teamMemberId.value; // This will be the index for editing
+            if (id !== '') {
+                team[parseInt(id)] = newMember;
+            } else {
+                team.push(newMember);
+            }
+
+            const success = await saveData('about/team', team);
+            if (success) {
+                alert('Team member saved successfully!');
+                clearForm([teamMemberId, teamMemberName, teamMemberRole, teamMemberImage]);
+                loadAbout(); // Reload all about data including team
+            } else {
+                alert('Failed to save team member.');
+            }
+        });
+
+        clearTeamMemberBtn.addEventListener('click', () => {
+            clearForm([teamMemberId, teamMemberName, teamMemberRole, teamMemberImage]);
+        });
+
+        async function editTeamMember(event) {
+            const index = parseInt(event.target.dataset.index);
+            const aboutData = await fetchData('about');
+            const member = aboutData.team[index];
+            if (member) {
+                teamMemberId.value = index;
+                teamMemberName.value = member.name || '';
+                teamMemberRole.value = member.role || '';
+                teamMemberImage.value = member.image || '';
+                document.getElementById('about-tab').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        async function deleteTeamMember(event) {
+            const index = parseInt(event.target.dataset.index);
+            if (confirm('Are you sure you want to delete this team member?')) {
+                const aboutData = await fetchData('about');
+                const team = aboutData.team || [];
+                team.splice(index, 1);
+                const success = await saveData('about/team', team);
+                if (success) {
+                    alert('Team member deleted successfully!');
+                    loadAbout();
+                } else {
+                    alert('Failed to delete team member.');
+                }
+            }
+        }
+
+        // --- Contact Info Management ---
+        const contactEmail = document.getElementById('contact-email');
+        const contactPhone = document.getElementById('contact-phone');
+        const contactAddress = document.getElementById('contact-address');
+        const socialFacebook = document.getElementById('social-facebook');
+        const socialTwitter = document.getElementById('social-twitter');
+        const socialLinkedin = document.getElementById('social-linkedin');
+        const saveContactInfoBtn = document.getElementById('save-contact-info-btn');
+
+        async function loadContactInfo() {
+            const contactInfo = await fetchData('contactInfo');
+            if (contactInfo) {
+                contactEmail.value = contactInfo.email || '';
+                contactPhone.value = contactInfo.phone || '';
+                contactAddress.value = contactInfo.address || '';
+                socialFacebook.value = contactInfo.socials?.facebook || '';
+                socialTwitter.value = contactInfo.socials?.twitter || '';
+                socialLinkedin.value = contactInfo.socials?.linkedin || '';
+            }
+        }
+
+        saveContactInfoBtn.addEventListener('click', async () => {
+            const contactData = {
+                email: contactEmail.value,
+                phone: contactPhone.value,
+                address: contactAddress.value,
+                socials: {
+                    facebook: socialFacebook.value,
+                    twitter: socialTwitter.value,
+                    linkedin: socialLinkedin.value
+                }
+            };
+            const success = await saveData('contactInfo', contactData);
+            if (success) {
+                alert('Contact information saved successfully!');
+            } else {
+                alert('Failed to save contact information.');
+            }
+        });
+
+        // --- Contact Submissions ---
+        const contactSubmissionsList = document.getElementById('contact-submissions-list');
+
+        async function loadContactSubmissions() {
+            contactSubmissionsList.innerHTML = '<p class="text-center text-gray-500">Loading submissions...</p>';
+            const submissions = await fetchData('contactSubmissions');
+            contactSubmissionsList.innerHTML = '';
+            if (submissions) {
+                const submissionArray = Object.values(submissions).sort((a, b) => b.timestamp - a.timestamp); // Sort by newest
+                if (submissionArray.length === 0) {
+                    contactSubmissionsList.innerHTML = '<p class="text-center text-gray-500">No contact form submissions yet.</p>';
+                    return;
+                }
+                submissionArray.forEach(submission => {
+                    const date = new Date(submission.timestamp).toLocaleString();
+                    const submissionItem = document.createElement('div');
+                    submissionItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 mb-3';
+                    submissionItem.innerHTML = `
+                        <p><strong class="text-gray-900">Name:</strong> ${submission.name}</p>
+                        <p><strong class="text-gray-900">Email:</strong> ${submission.email}</p>
+                        <p><strong class="text-gray-900">Message:</strong> ${submission.message}</p>
+                        <p class="text-xs text-gray-500 mt-2">Submitted on: ${date}</p>
+                    `;
+                    contactSubmissionsList.appendChild(submissionItem);
+                });
+            } else {
+                contactSubmissionsList.innerHTML = '<p class="text-center text-gray-500">No contact form submissions yet.</p>';
+            }
+        }
+
+        // --- Newsletter Subscriptions ---
+        const newsletterSubscriptionsList = document.getElementById('newsletter-subscriptions-list');
+
+        async function loadNewsletterSubscriptions() {
+            newsletterSubscriptionsList.innerHTML = '<p class="text-center text-gray-500">Loading subscriptions...</p>';
+            const subscriptions = await fetchData('newsletterSubscriptions');
+            newsletterSubscriptionsList.innerHTML = '';
+            if (subscriptions) {
+                const subscriptionArray = Object.values(subscriptions).sort((a, b) => b.timestamp - a.timestamp); // Sort by newest
+                if (subscriptionArray.length === 0) {
+                    newsletterSubscriptionsList.innerHTML = '<p class="text-center text-gray-500">No newsletter subscriptions yet.</p>';
+                    return;
+                }
+                subscriptionArray.forEach(subscription => {
+                    const date = new Date(subscription.timestamp).toLocaleString();
+                    const subscriptionItem = document.createElement('div');
+                    subscriptionItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 mb-3';
+                    subscriptionItem.innerHTML = `
+                        <p><strong class="text-gray-900">Email:</strong> ${subscription.email}</p>
+                        <p class="text-xs text-gray-500 mt-2">Subscribed on: ${date}</p>
+                    `;
+                    newsletterSubscriptionsList.appendChild(subscriptionItem);
+                });
+            } else {
+                newsletterSubscriptionsList.innerHTML = '<p class="text-center text-gray-500">No newsletter subscriptions yet.</p>';
+            }
+        }
+
+        // --- Announcement Management ---
+        const announcementActive = document.getElementById('announcement-active');
+        const announcementMessage = document.getElementById('announcement-message');
+        const saveAnnouncementBtn = document.getElementById('save-announcement-btn');
+
+        async function loadAnnouncement() {
+            const announcement = await fetchData('announcement');
+            if (announcement) {
+                announcementActive.checked = announcement.active || false;
+                announcementMessage.value = announcement.message || '';
+            } else {
+                announcementActive.checked = false;
+                announcementMessage.value = '';
+            }
+        }
+
+        saveAnnouncementBtn.addEventListener('click', async () => {
+            const announcementData = {
+                active: announcementActive.checked,
+                message: announcementMessage.value
+            };
+            const success = await saveData('announcement', announcementData);
+            if (success) {
+                alert('Announcement saved successfully!');
+            } else {
+                alert('Failed to save announcement.');
+            }
+        });
+
+        // Event listeners for loading data when tabs are clicked
+        document.querySelector('[data-tab="tools"]').addEventListener('click', loadTools);
+        document.querySelector('[data-tab="features"]').addEventListener('click', loadFeatures);
+        document.querySelector('[data-tab="faqs"]').addEventListener('click', loadFAQs);
+        document.querySelector('[data-tab="testimonials"]').addEventListener('click', loadTestimonials);
+        document.querySelector('[data-tab="about"]').addEventListener('click', loadAbout);
+        document.querySelector('[data-tab="contactInfo"]').addEventListener('click', loadContactInfo);
+        document.querySelector('[data-tab="contactSubmissions"]').addEventListener('click', loadContactSubmissions);
+        document.querySelector('[data-tab="newsletterSubscriptions"]').addEventListener('click', loadNewsletterSubscriptions);
+        document.querySelector('[data-tab="announcement"]').addEventListener('click', loadAnnouncement);
+
+    </script>
+</body>
+                      </html>
