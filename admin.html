@@ -46,6 +46,7 @@
                     <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="contactSubmissions">Contact Submissions</button>
                     <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="newsletterSubscriptions">Newsletter Subs</button>
                     <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="announcement">Announcement</button>
+                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="adminUsers">Admin Users</button>
                 </nav>
             </aside>
 
@@ -210,6 +211,34 @@
                     </div>
                 </div>
 
+                <div id="adminUsers-tab" class="tab-content hidden">
+                    <h2 class="text-3xl font-bold mb-6">Manage Admin Users</h2>
+                    <p id="admin-users-message" class="text-red-600 mb-4 hidden">You do not have permission to manage admin users.</p>
+                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Add New Admin User</h3>
+                        <input type="text" id="new-admin-uid" placeholder="User UID (from Firebase Auth)" class="w-full p-2 mb-3 border rounded-lg">
+                        <input type="email" id="new-admin-email" placeholder="User Email" class="w-full p-2 mb-3 border rounded-lg">
+                        <label class="inline-flex items-center mb-3">
+                            <input type="checkbox" id="is-super-admin" class="form-checkbox h-5 w-5 text-blue-600">
+                            <span class="ml-2 text-gray-700 font-medium">Is Super Admin?</span>
+                        </label>
+                        <label class="inline-flex items-center mb-3 ml-4">
+                            <input type="checkbox" id="is-sub-admin" class="form-checkbox h-5 w-5 text-blue-600">
+                            <span class="ml-2 text-gray-700 font-medium">Is Sub Admin?</span>
+                        </label>
+                        <div class="flex space-x-4 mt-3">
+                            <button id="add-admin-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Add Admin</button>
+                            <button id="clear-admin-form-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Existing Admin Users</h3>
+                        <div id="admin-users-list" class="space-y-4">
+                            <p class="text-center text-gray-500">Loading admin users...</p>
+                        </div>
+                    </div>
+                </div>
+
             </main>
         </div>
     </div>
@@ -217,7 +246,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-        import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, deleteDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
         // --- Your Firebase Config ---
         const firebaseConfig = {
@@ -227,18 +256,19 @@
             storageBucket: "next-gen-186aa.firebasestorage.app",
             messagingSenderId: "338569531164",
             appId: "1:338569531164:web:932df077b59a0a371b34d9",
-            databaseURL: "https://next-gen-186aa-default-rtdb.firebaseio.com" // Ensure this is your Realtime Database URL
+            measurementId: "G-7GCT5KHFQ0"
         };
         // --- END Firebase Config ---
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const database = getDatabase(app);
+        const db = getFirestore(app); // Get Firestore instance
 
-        const adminUserUIDs = {
-            "PjtAITuXjLYN6A1NX4pzy9KEZwJ3": true, // Super Admin
-            "vuY4TfTHdyRmltDUWCQerWGEyEG3": true  // Sub Admin
-        };
+        const superAdminUID = 'PjtAITuXjLYN6A1NX4pzy9KEZwJ3'; // Your super admin UID
+        const subAdminUID = 'vuY4TfTHdyRmltDUWCQerWGEyEG3'; // Your sub admin UID
+
+        let currentUserIsSuperAdmin = false;
+        let currentUserIsSubAdmin = false;
 
         const loginSection = document.getElementById('login-section');
         const adminPanelSection = document.getElementById('admin-panel-section');
@@ -248,33 +278,74 @@
         const loginMessage = document.getElementById('login-message');
         const logoutBtn = document.getElementById('logout-btn');
         const adminEmailDisplay = document.getElementById('admin-email-display');
+        const adminUsersMessage = document.getElementById('admin-users-message'); // For permission message
 
         // Tab Management
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
 
         tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', async () => {
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 tabContents.forEach(content => content.classList.add('hidden'));
 
                 button.classList.add('active');
-                document.getElementById(`${button.dataset.tab}-tab`).classList.remove('hidden');
+                const tabId = button.dataset.tab;
+                document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+
+                // Load data for the clicked tab
+                switch (tabId) {
+                    case 'tools': await loadTools(); break;
+                    case 'features': await loadFeatures(); break;
+                    case 'faqs': await loadFAQs(); break;
+                    case 'testimonials': await loadTestimonials(); break;
+                    case 'about': await loadAbout(); break;
+                    case 'contactInfo': await loadContactInfo(); break;
+                    case 'contactSubmissions': await loadContactSubmissions(); break;
+                    case 'newsletterSubscriptions': await loadNewsletterSubscriptions(); break;
+                    case 'announcement': await loadAnnouncement(); break;
+                    case 'adminUsers': await loadAdminUsers(); break;
+                    default: console.log("Unknown tab:", tabId);
+                }
             });
         });
 
         // Firebase Auth State Listener
-        onAuthStateChanged(auth, (user) => {
-            if (user && adminUserUIDs[user.uid]) {
-                loginSection.classList.add('hidden');
-                adminPanelSection.classList.remove('hidden');
-                adminEmailDisplay.textContent = user.email;
-                loadAdminData(); // Load data once logged in
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Check if the logged-in user is an admin
+                const adminDoc = await getDoc(doc(db, "adminUsers", user.uid));
+                if (adminDoc.exists()) {
+                    const adminData = adminDoc.data();
+                    currentUserIsSuperAdmin = adminData.isSuperAdmin || false;
+                    currentUserIsSubAdmin = adminData.isSubAdmin || false;
+
+                    if (currentUserIsSuperAdmin || currentUserIsSubAdmin) {
+                        loginSection.classList.add('hidden');
+                        adminPanelSection.classList.remove('hidden');
+                        adminEmailDisplay.textContent = user.email;
+                        loadAdminDataOnLogin(); // Load initial tab data
+                    } else {
+                        // User exists in adminUsers but is neither super nor sub admin
+                        await signOut(auth); // Force logout
+                        loginMessage.textContent = 'Your account is not authorized to access this panel. Please contact support.';
+                        loginSection.classList.remove('hidden');
+                        adminPanelSection.classList.add('hidden');
+                    }
+                } else {
+                    // User is logged in but not found in adminUsers collection
+                    await signOut(auth); // Force logout
+                    loginMessage.textContent = 'Your account is not registered as an administrator. Please contact support.';
+                    loginSection.classList.remove('hidden');
+                    adminPanelSection.classList.add('hidden');
+                }
             } else {
                 loginSection.classList.remove('hidden');
                 adminPanelSection.classList.add('hidden');
                 adminEmailDisplay.textContent = '';
                 loginMessage.textContent = ''; // Clear message on logout/no user
+                currentUserIsSuperAdmin = false;
+                currentUserIsSubAdmin = false;
             }
         });
 
@@ -291,11 +362,7 @@
 
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                if (!adminUserUIDs[userCredential.user.uid]) {
-                    // Log out if not an authorized admin UID, even if login was successful
-                    await signOut(auth);
-                    loginMessage.textContent = 'You are not authorized to access this panel.';
-                }
+                // Auth state listener will handle UI update and admin check
             } catch (error) {
                 console.error("Login error:", error);
                 loginMessage.textContent = `Login failed: ${error.message}`;
@@ -314,50 +381,42 @@
 
         // --- Data Management Functions ---
 
-        async function fetchData(path) {
-            return new Promise((resolve, reject) => {
-                const dataRef = ref(database, path);
-                onValue(dataRef, (snapshot) => {
-                    const data = snapshot.val();
-                    resolve(data);
-                }, (error) => {
-                    console.error(`Error fetching data from ${path}:`, error);
-                    reject(error);
-                }, {
-                    onlyOnce: true
-                });
+        // Helper to fetch documents from a collection
+        async function getCollectionDocs(collectionName) {
+            const querySnapshot = await getDocs(collection(db, collectionName));
+            const data = {};
+            querySnapshot.forEach(doc => {
+                data[doc.id] = doc.data();
             });
+            return data;
         }
 
-        async function saveData(path, data) {
-            try {
-                await set(ref(database, path), data);
-                return true;
-            } catch (error) {
-                console.error(`Error saving data to ${path}:`, error);
-                return false;
+        // Helper to fetch a single document
+        async function getSingleDoc(collectionName, docId) {
+            const docRef = doc(db, collectionName, docId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                return docSnap.data();
             }
+            return null;
         }
 
-        async function pushData(path, data) {
-            try {
-                const newRef = push(ref(database, path));
-                await set(newRef, data);
-                return newRef.key;
-            } catch (error) {
-                console.error(`Error pushing data to ${path}:`, error);
-                return null;
-            }
+        // Helper to save/update a document by ID
+        async function setDocument(collectionName, docId, data) {
+            const docRef = doc(db, collectionName, docId);
+            await setDoc(docRef, data);
         }
 
-        async function removeData(path) {
-            try {
-                await remove(ref(database, path));
-                return true;
-            } catch (error) {
-                console.error(`Error removing data from ${path}:`, error);
-                return false;
-            }
+        // Helper to add a new document (with auto-generated ID)
+        async function addDocument(collectionName, data) {
+            const docRef = await addDoc(collection(db, collectionName), data);
+            return docRef.id;
+        }
+
+        // Helper to delete a document
+        async function deleteDocument(collectionName, docId) {
+            const docRef = doc(db, collectionName, docId);
+            await deleteDoc(docRef);
         }
 
         // --- General UI Utilities ---
@@ -373,7 +432,7 @@
 
         // --- Load & Render Functions for Each Tab ---
 
-        async function loadAdminData() {
+        async function loadAdminDataOnLogin() {
             // Load and render data for the currently active tab initially
             const activeTabButton = document.querySelector('.tab-button.active');
             if (activeTabButton) {
@@ -388,6 +447,7 @@
                     case 'contactSubmissions': await loadContactSubmissions(); break;
                     case 'newsletterSubscriptions': await loadNewsletterSubscriptions(); break;
                     case 'announcement': await loadAnnouncement(); break;
+                    case 'adminUsers': await loadAdminUsers(); break;
                     default: console.log("Unknown tab:", tabName);
                 }
             }
@@ -408,34 +468,43 @@
 
         async function loadTools() {
             toolsList.innerHTML = '<p class="text-center text-gray-500">Loading tools...</p>';
-            const tools = await fetchData('tools');
-            toolsList.innerHTML = '';
-            if (tools) {
-                Object.keys(tools).forEach(key => {
-                    const tool = tools[key];
-                    const toolItem = document.createElement('div');
-                    toolItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
-                    toolItem.innerHTML = `
-                        <div>
-                            <h4 class="font-semibold text-gray-900">${tool.title}</h4>
-                            <p class="text-sm text-gray-600">${tool.description}</p>
-                            <p class="text-xs text-gray-500">Category: ${tool.category || 'N/A'}</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button data-id="${key}" class="edit-tool-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
-                            <button data-id="${key}" class="delete-tool-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
-                        </div>
-                    `;
-                    toolsList.appendChild(toolItem);
-                });
-                document.querySelectorAll('.edit-tool-btn').forEach(button => button.addEventListener('click', editTool));
-                document.querySelectorAll('.delete-tool-btn').forEach(button => button.addEventListener('click', deleteTool));
-            } else {
-                toolsList.innerHTML = '<p class="text-center text-gray-500">No tools found.</p>';
+            try {
+                const tools = await getCollectionDocs('tools');
+                toolsList.innerHTML = '';
+                if (Object.keys(tools).length > 0) {
+                    Object.keys(tools).forEach(key => {
+                        const tool = tools[key];
+                        const toolItem = document.createElement('div');
+                        toolItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
+                        toolItem.innerHTML = `
+                            <div>
+                                <h4 class="font-semibold text-gray-900">${tool.title}</h4>
+                                <p class="text-sm text-gray-600">${tool.description}</p>
+                                <p class="text-xs text-gray-500">Category: ${tool.category || 'N/A'}</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button data-id="${key}" class="edit-tool-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                                <button data-id="${key}" class="delete-tool-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                            </div>
+                        `;
+                        toolsList.appendChild(toolItem);
+                    });
+                    document.querySelectorAll('.edit-tool-btn').forEach(button => button.addEventListener('click', editTool));
+                    document.querySelectorAll('.delete-tool-btn').forEach(button => button.addEventListener('click', deleteTool));
+                } else {
+                    toolsList.innerHTML = '<p class="text-center text-gray-500">No tools found.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading tools:", error);
+                toolsList.innerHTML = '<p class="text-center text-red-500">Failed to load tools.</p>';
             }
         }
 
         saveToolBtn.addEventListener('click', async () => {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to save tools.');
+                return;
+            }
             const id = toolId.value;
             const featuresArray = toolFeatures.value.split(',').map(f => f.trim()).filter(f => f !== '');
             const toolData = {
@@ -448,20 +517,19 @@
                 features: featuresArray.length > 0 ? featuresArray : null
             };
 
-            let success;
-            if (id) {
-                success = await saveData(`tools/${id}`, toolData);
-            } else {
-                const newId = toolData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '');
-                success = await saveData(`tools/${newId}`, toolData); // Use a slug as ID
-            }
-
-            if (success) {
+            try {
+                if (id) {
+                    await setDocument('tools', id, toolData);
+                } else {
+                    const newId = toolData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '');
+                    await setDocument('tools', newId, toolData); // Use a slug as ID for new tools
+                }
                 alert('Tool saved successfully!');
                 clearForm([toolId, toolTitle, toolDescription, toolImage, toolUrl, toolCategory, toolIframeUrl, toolFeatures]);
                 loadTools();
-            } else {
-                alert('Failed to save tool.');
+            } catch (error) {
+                console.error("Error saving tool:", error);
+                alert('Failed to save tool: ' + error.message);
             }
         });
 
@@ -471,7 +539,7 @@
 
         async function editTool(event) {
             const id = event.target.dataset.id;
-            const tool = await fetchData(`tools/${id}`);
+            const tool = await getSingleDoc('tools', id);
             if (tool) {
                 toolId.value = id;
                 toolTitle.value = tool.title || '';
@@ -482,18 +550,25 @@
                 toolIframeUrl.value = tool.iframeUrl || '';
                 toolFeatures.value = Array.isArray(tool.features) ? tool.features.join(', ') : '';
                 document.getElementById('tools-tab').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("Tool not found for editing.");
             }
         }
 
         async function deleteTool(event) {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to delete tools.');
+                return;
+            }
             const id = event.target.dataset.id;
             if (confirm('Are you sure you want to delete this tool?')) {
-                const success = await removeData(`tools/${id}`);
-                if (success) {
+                try {
+                    await deleteDocument('tools', id);
                     alert('Tool deleted successfully!');
                     loadTools();
-                } else {
-                    alert('Failed to delete tool.');
+                } catch (error) {
+                    console.error("Error deleting tool:", error);
+                    alert('Failed to delete tool: ' + error.message);
                 }
             }
         }
@@ -509,33 +584,42 @@
 
         async function loadFeatures() {
             featuresList.innerHTML = '<p class="text-center text-gray-500">Loading features...</p>';
-            const features = await fetchData('features');
-            featuresList.innerHTML = '';
-            if (features) {
-                Object.keys(features).forEach(key => {
-                    const feature = features[key];
-                    const featureItem = document.createElement('div');
-                    featureItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
-                    featureItem.innerHTML = `
-                        <div>
-                            <h4 class="font-semibold text-gray-900">${feature.icon} ${feature.title}</h4>
-                            <p class="text-sm text-gray-600">${feature.description}</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button data-id="${key}" class="edit-feature-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
-                            <button data-id="${key}" class="delete-feature-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
-                        </div>
-                    `;
-                    featuresList.appendChild(featureItem);
-                });
-                document.querySelectorAll('.edit-feature-btn').forEach(button => button.addEventListener('click', editFeature));
-                document.querySelectorAll('.delete-feature-btn').forEach(button => button.addEventListener('click', deleteFeature));
-            } else {
-                featuresList.innerHTML = '<p class="text-center text-gray-500">No features found.</p>';
+            try {
+                const features = await getCollectionDocs('features');
+                featuresList.innerHTML = '';
+                if (Object.keys(features).length > 0) {
+                    Object.keys(features).forEach(key => {
+                        const feature = features[key];
+                        const featureItem = document.createElement('div');
+                        featureItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
+                        featureItem.innerHTML = `
+                            <div>
+                                <h4 class="font-semibold text-gray-900">${feature.icon} ${feature.title}</h4>
+                                <p class="text-sm text-gray-600">${feature.description}</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button data-id="${key}" class="edit-feature-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                                <button data-id="${key}" class="delete-feature-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                            </div>
+                        `;
+                        featuresList.appendChild(featureItem);
+                    });
+                    document.querySelectorAll('.edit-feature-btn').forEach(button => button.addEventListener('click', editFeature));
+                    document.querySelectorAll('.delete-feature-btn').forEach(button => button.addEventListener('click', deleteFeature));
+                } else {
+                    featuresList.innerHTML = '<p class="text-center text-gray-500">No features found.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading features:", error);
+                featuresList.innerHTML = '<p class="text-center text-red-500">Failed to load features.</p>';
             }
         }
 
         saveFeatureBtn.addEventListener('click', async () => {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to save features.');
+                return;
+            }
             const id = featureId.value;
             const featureData = {
                 title: featureTitle.value,
@@ -543,20 +627,19 @@
                 icon: featureIcon.value
             };
 
-            let success;
-            if (id) {
-                success = await saveData(`features/${id}`, featureData);
-            } else {
-                const newId = featureData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '');
-                success = await saveData(`features/${newId}`, featureData);
-            }
-
-            if (success) {
+            try {
+                if (id) {
+                    await setDocument('features', id, featureData);
+                } else {
+                    const newId = featureData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '');
+                    await setDocument('features', newId, featureData);
+                }
                 alert('Feature saved successfully!');
                 clearForm([featureId, featureTitle, featureDescription, featureIcon]);
                 loadFeatures();
-            } else {
-                alert('Failed to save feature.');
+            } catch (error) {
+                console.error("Error saving feature:", error);
+                alert('Failed to save feature: ' + error.message);
             }
         });
 
@@ -566,25 +649,32 @@
 
         async function editFeature(event) {
             const id = event.target.dataset.id;
-            const feature = await fetchData(`features/${id}`);
+            const feature = await getSingleDoc('features', id);
             if (feature) {
                 featureId.value = id;
                 featureTitle.value = feature.title || '';
                 featureDescription.value = feature.description || '';
                 featureIcon.value = feature.icon || '';
                 document.getElementById('features-tab').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("Feature not found for editing.");
             }
         }
 
         async function deleteFeature(event) {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to delete features.');
+                return;
+            }
             const id = event.target.dataset.id;
             if (confirm('Are you sure you want to delete this feature?')) {
-                const success = await removeData(`features/${id}`);
-                if (success) {
+                try {
+                    await deleteDocument('features', id);
                     alert('Feature deleted successfully!');
                     loadFeatures();
-                } else {
-                    alert('Failed to delete feature.');
+                } catch (error) {
+                    console.error("Error deleting feature:", error);
+                    alert('Failed to delete feature: ' + error.message);
                 }
             }
         }
@@ -599,53 +689,60 @@
 
         async function loadFAQs() {
             faqsList.innerHTML = '<p class="text-center text-gray-500">Loading FAQs...</p>';
-            const faqs = await fetchData('faqs');
-            faqsList.innerHTML = '';
-            if (faqs) {
-                Object.keys(faqs).forEach(key => {
-                    const faq = faqs[key];
-                    const faqItem = document.createElement('div');
-                    faqItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
-                    faqItem.innerHTML = `
-                        <div>
-                            <h4 class="font-semibold text-gray-900">${faq.question}</h4>
-                            <p class="text-sm text-gray-600">${faq.answer}</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button data-id="${key}" class="edit-faq-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
-                            <button data-id="${key}" class="delete-faq-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
-                        </div>
-                    `;
-                    faqsList.appendChild(faqItem);
-                });
-                document.querySelectorAll('.edit-faq-btn').forEach(button => button.addEventListener('click', editFAQ));
-                document.querySelectorAll('.delete-faq-btn').forEach(button => button.addEventListener('click', deleteFAQ));
-            } else {
-                faqsList.innerHTML = '<p class="text-center text-gray-500">No FAQs found.</p>';
+            try {
+                const faqs = await getCollectionDocs('faqs');
+                faqsList.innerHTML = '';
+                if (Object.keys(faqs).length > 0) {
+                    Object.keys(faqs).forEach(key => {
+                        const faq = faqs[key];
+                        const faqItem = document.createElement('div');
+                        faqItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
+                        faqItem.innerHTML = `
+                            <div>
+                                <h4 class="font-semibold text-gray-900">${faq.question}</h4>
+                                <p class="text-sm text-gray-600">${faq.answer}</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button data-id="${key}" class="edit-faq-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                                <button data-id="${key}" class="delete-faq-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                            </div>
+                        `;
+                        faqsList.appendChild(faqItem);
+                    });
+                    document.querySelectorAll('.edit-faq-btn').forEach(button => button.addEventListener('click', editFAQ));
+                    document.querySelectorAll('.delete-faq-btn').forEach(button => button.addEventListener('click', deleteFAQ));
+                } else {
+                    faqsList.innerHTML = '<p class="text-center text-gray-500">No FAQs found.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading FAQs:", error);
+                faqsList.innerHTML = '<p class="text-center text-red-500">Failed to load FAQs.</p>';
             }
         }
 
         saveFaqBtn.addEventListener('click', async () => {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to save FAQs.');
+                return;
+            }
             const id = faqId.value;
             const faqData = {
                 question: faqQuestion.value,
                 answer: faqAnswer.value
             };
 
-            let success;
-            if (id) {
-                success = await saveData(`faqs/${id}`, faqData);
-            } else {
-                const newId = push(ref(database, 'faqs')).key; // Generate a unique ID
-                success = await saveData(`faqs/${newId}`, faqData);
-            }
-
-            if (success) {
+            try {
+                if (id) {
+                    await setDocument('faqs', id, faqData);
+                } else {
+                    await addDocument('faqs', faqData); // Firestore auto-generates ID for addDoc
+                }
                 alert('FAQ saved successfully!');
                 clearForm([faqId, faqQuestion, faqAnswer]);
                 loadFAQs();
-            } else {
-                alert('Failed to save FAQ.');
+            } catch (error) {
+                console.error("Error saving FAQ:", error);
+                alert('Failed to save FAQ: ' + error.message);
             }
         });
 
@@ -655,24 +752,31 @@
 
         async function editFAQ(event) {
             const id = event.target.dataset.id;
-            const faq = await fetchData(`faqs/${id}`);
+            const faq = await getSingleDoc('faqs', id);
             if (faq) {
                 faqId.value = id;
                 faqQuestion.value = faq.question || '';
                 faqAnswer.value = faq.answer || '';
                 document.getElementById('faqs-tab').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("FAQ not found for editing.");
             }
         }
 
         async function deleteFAQ(event) {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to delete FAQs.');
+                return;
+            }
             const id = event.target.dataset.id;
             if (confirm('Are you sure you want to delete this FAQ?')) {
-                const success = await removeData(`faqs/${id}`);
-                if (success) {
+                try {
+                    await deleteDocument('faqs', id);
                     alert('FAQ deleted successfully!');
                     loadFAQs();
-                } else {
-                    alert('Failed to delete FAQ.');
+                } catch (error) {
+                    console.error("Error deleting FAQ:", error);
+                    alert('Failed to delete FAQ: ' + error.message);
                 }
             }
         }
@@ -687,53 +791,60 @@
 
         async function loadTestimonials() {
             testimonialsList.innerHTML = '<p class="text-center text-gray-500">Loading testimonials...</p>';
-            const testimonials = await fetchData('testimonials');
-            testimonialsList.innerHTML = '';
-            if (testimonials) {
-                Object.keys(testimonials).forEach(key => {
-                    const testimonial = testimonials[key];
-                    const testimonialItem = document.createElement('div');
-                    testimonialItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
-                    testimonialItem.innerHTML = `
-                        <div>
-                            <h4 class="font-semibold text-gray-900">${testimonial.name}</h4>
-                            <p class="text-sm text-gray-600 italic">"${testimonial.quote}"</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button data-id="${key}" class="edit-testimonial-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
-                            <button data-id="${key}" class="delete-testimonial-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
-                        </div>
-                    `;
-                    testimonialsList.appendChild(testimonialItem);
-                });
-                document.querySelectorAll('.edit-testimonial-btn').forEach(button => button.addEventListener('click', editTestimonial));
-                document.querySelectorAll('.delete-testimonial-btn').forEach(button => button.addEventListener('click', deleteTestimonial));
-            } else {
-                testimonialsList.innerHTML = '<p class="text-center text-gray-500">No testimonials found.</p>';
+            try {
+                const testimonials = await getCollectionDocs('testimonials');
+                testimonialsList.innerHTML = '';
+                if (Object.keys(testimonials).length > 0) {
+                    Object.keys(testimonials).forEach(key => {
+                        const testimonial = testimonials[key];
+                        const testimonialItem = document.createElement('div');
+                        testimonialItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
+                        testimonialItem.innerHTML = `
+                            <div>
+                                <h4 class="font-semibold text-gray-900">${testimonial.name}</h4>
+                                <p class="text-sm text-gray-600 italic">"${testimonial.quote}"</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button data-id="${key}" class="edit-testimonial-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                                <button data-id="${key}" class="delete-testimonial-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                            </div>
+                        `;
+                        testimonialsList.appendChild(testimonialItem);
+                    });
+                    document.querySelectorAll('.edit-testimonial-btn').forEach(button => button.addEventListener('click', editTestimonial));
+                    document.querySelectorAll('.delete-testimonial-btn').forEach(button => button.addEventListener('click', deleteTestimonial));
+                } else {
+                    testimonialsList.innerHTML = '<p class="text-center text-gray-500">No testimonials found.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading testimonials:", error);
+                testimonialsList.innerHTML = '<p class="text-center text-red-500">Failed to load testimonials.</p>';
             }
         }
 
         saveTestimonialBtn.addEventListener('click', async () => {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to save testimonials.');
+                return;
+            }
             const id = testimonialId.value;
             const testimonialData = {
                 name: testimonialName.value,
                 quote: testimonialQuote.value
             };
 
-            let success;
-            if (id) {
-                success = await saveData(`testimonials/${id}`, testimonialData);
-            } else {
-                const newId = push(ref(database, 'testimonials')).key;
-                success = await saveData(`testimonials/${newId}`, testimonialData);
-            }
-
-            if (success) {
+            try {
+                if (id) {
+                    await setDocument('testimonials', id, testimonialData);
+                } else {
+                    await addDocument('testimonials', testimonialData);
+                }
                 alert('Testimonial saved successfully!');
                 clearForm([testimonialId, testimonialName, testimonialQuote]);
                 loadTestimonials();
-            } else {
-                alert('Failed to save testimonial.');
+            } catch (error) {
+                console.error("Error saving testimonial:", error);
+                alert('Failed to save testimonial: ' + error.message);
             }
         });
 
@@ -743,24 +854,31 @@
 
         async function editTestimonial(event) {
             const id = event.target.dataset.id;
-            const testimonial = await fetchData(`testimonials/${id}`);
+            const testimonial = await getSingleDoc('testimonials', id);
             if (testimonial) {
                 testimonialId.value = id;
                 testimonialName.value = testimonial.name || '';
                 testimonialQuote.value = testimonial.quote || '';
                 document.getElementById('testimonials-tab').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("Testimonial not found for editing.");
             }
         }
 
         async function deleteTestimonial(event) {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to delete testimonials.');
+                return;
+            }
             const id = event.target.dataset.id;
             if (confirm('Are you sure you want to delete this testimonial?')) {
-                const success = await removeData(`testimonials/${id}`);
-                if (success) {
+                try {
+                    await deleteDocument('testimonials', id);
                     alert('Testimonial deleted successfully!');
                     loadTestimonials();
-                } else {
-                    alert('Failed to delete testimonial.');
+                } catch (error) {
+                    console.error("Error deleting testimonial:", error);
+                    alert('Failed to delete testimonial: ' + error.message);
                 }
             }
         }
@@ -779,17 +897,29 @@
         const teamMembersList = document.getElementById('team-members-list');
 
         async function loadAbout() {
-            const aboutData = await fetchData('about');
-            if (aboutData) {
-                aboutMission.value = aboutData.mission || '';
-                aboutStory.value = aboutData.story || '';
-                renderTeamMembers(aboutData.team);
+            try {
+                const aboutData = await getSingleDoc('about', 'companyInfo');
+                if (aboutData) {
+                    aboutMission.value = aboutData.mission || '';
+                    aboutStory.value = aboutData.story || '';
+                    renderTeamMembers(aboutData.team);
+                } else {
+                    aboutMission.value = '';
+                    aboutStory.value = '';
+                    renderTeamMembers([]); // Clear team if no data
+                    console.log("About Us document 'companyInfo' not found.");
+                }
+            } catch (error) {
+                console.error("Error loading About Us data:", error);
+                aboutMission.value = 'Failed to load.';
+                aboutStory.value = 'Failed to load.';
+                teamMembersList.innerHTML = '<p class="text-center text-red-500">Failed to load team members.</p>';
             }
         }
 
         function renderTeamMembers(team) {
             teamMembersList.innerHTML = '';
-            if (team && Array.isArray(team)) {
+            if (team && Array.isArray(team) && team.length > 0) {
                 team.forEach((member, index) => {
                     const memberItem = document.createElement('div');
                     memberItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
@@ -813,42 +943,52 @@
         }
 
         saveAboutTextBtn.addEventListener('click', async () => {
-            const currentAbout = await fetchData('about') || {};
-            const success = await saveData('about', {
-                ...currentAbout,
-                mission: aboutMission.value,
-                story: aboutStory.value
-            });
-            if (success) {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to save About Us text.');
+                return;
+            }
+            try {
+                // Fetch current team to merge, or initialize if not present
+                const currentAbout = await getSingleDoc('about', 'companyInfo') || {};
+                await setDocument('about', 'companyInfo', {
+                    mission: aboutMission.value,
+                    story: aboutStory.value,
+                    team: currentAbout.team || [] // Preserve existing team
+                });
                 alert('About text saved successfully!');
-            } else {
-                alert('Failed to save about text.');
+            } catch (error) {
+                console.error("Error saving about text:", error);
+                alert('Failed to save about text: ' + error.message);
             }
         });
 
         saveTeamMemberBtn.addEventListener('click', async () => {
-            const currentAbout = await fetchData('about') || {};
-            const team = currentAbout.team || [];
-            const newMember = {
-                name: teamMemberName.value,
-                role: teamMemberRole.value,
-                image: teamMemberImage.value
-            };
-
-            const id = teamMemberId.value; // This will be the index for editing
-            if (id !== '') {
-                team[parseInt(id)] = newMember;
-            } else {
-                team.push(newMember);
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to save team members.');
+                return;
             }
+            try {
+                const currentAbout = await getSingleDoc('about', 'companyInfo') || {};
+                const team = currentAbout.team || [];
+                const newMember = {
+                    name: teamMemberName.value,
+                    role: teamMemberRole.value,
+                    image: teamMemberImage.value
+                };
 
-            const success = await saveData('about/team', team);
-            if (success) {
+                const id = teamMemberId.value; // This will be the index for editing
+                if (id !== '') {
+                    team[parseInt(id)] = newMember;
+                } else {
+                    team.push(newMember);
+                }
+                await setDocument('about', 'companyInfo', { ...currentAbout, team });
                 alert('Team member saved successfully!');
                 clearForm([teamMemberId, teamMemberName, teamMemberRole, teamMemberImage]);
                 loadAbout(); // Reload all about data including team
-            } else {
-                alert('Failed to save team member.');
+            } catch (error) {
+                console.error("Error saving team member:", error);
+                alert('Failed to save team member: ' + error.message);
             }
         });
 
@@ -858,7 +998,7 @@
 
         async function editTeamMember(event) {
             const index = parseInt(event.target.dataset.index);
-            const aboutData = await fetchData('about');
+            const aboutData = await getSingleDoc('about', 'companyInfo');
             const member = aboutData.team[index];
             if (member) {
                 teamMemberId.value = index;
@@ -866,21 +1006,28 @@
                 teamMemberRole.value = member.role || '';
                 teamMemberImage.value = member.image || '';
                 document.getElementById('about-tab').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("Team member not found for editing.");
             }
         }
 
         async function deleteTeamMember(event) {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to delete team members.');
+                return;
+            }
             const index = parseInt(event.target.dataset.index);
             if (confirm('Are you sure you want to delete this team member?')) {
-                const aboutData = await fetchData('about');
-                const team = aboutData.team || [];
-                team.splice(index, 1);
-                const success = await saveData('about/team', team);
-                if (success) {
+                try {
+                    const aboutData = await getSingleDoc('about', 'companyInfo');
+                    const team = aboutData.team || [];
+                    team.splice(index, 1);
+                    await setDocument('about', 'companyInfo', { ...aboutData, team });
                     alert('Team member deleted successfully!');
                     loadAbout();
-                } else {
-                    alert('Failed to delete team member.');
+                } catch (error) {
+                    console.error("Error deleting team member:", error);
+                    alert('Failed to delete team member: ' + error.message);
                 }
             }
         }
@@ -895,18 +1042,30 @@
         const saveContactInfoBtn = document.getElementById('save-contact-info-btn');
 
         async function loadContactInfo() {
-            const contactInfo = await fetchData('contactInfo');
-            if (contactInfo) {
-                contactEmail.value = contactInfo.email || '';
-                contactPhone.value = contactInfo.phone || '';
-                contactAddress.value = contactInfo.address || '';
-                socialFacebook.value = contactInfo.socials?.facebook || '';
-                socialTwitter.value = contactInfo.socials?.twitter || '';
-                socialLinkedin.value = contactInfo.socials?.linkedin || '';
+            try {
+                const contactInfo = await getSingleDoc('contactInfo', 'main');
+                if (contactInfo) {
+                    contactEmail.value = contactInfo.email || '';
+                    contactPhone.value = contactInfo.phone || '';
+                    contactAddress.value = contactInfo.address || '';
+                    socialFacebook.value = contactInfo.socials?.facebook || '';
+                    socialTwitter.value = contactInfo.socials?.twitter || '';
+                    socialLinkedin.value = contactInfo.socials?.linkedin || '';
+                } else {
+                    clearForm([contactEmail, contactPhone, contactAddress, socialFacebook, socialTwitter, socialLinkedin]);
+                    console.log("Contact Info document 'main' not found.");
+                }
+            } catch (error) {
+                console.error("Error loading contact info:", error);
+                alert('Failed to load contact information.');
             }
         }
 
         saveContactInfoBtn.addEventListener('click', async () => {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to save contact information.');
+                return;
+            }
             const contactData = {
                 email: contactEmail.value,
                 phone: contactPhone.value,
@@ -917,11 +1076,12 @@
                     linkedin: socialLinkedin.value
                 }
             };
-            const success = await saveData('contactInfo', contactData);
-            if (success) {
+            try {
+                await setDocument('contactInfo', 'main', contactData);
                 alert('Contact information saved successfully!');
-            } else {
-                alert('Failed to save contact information.');
+            } catch (error) {
+                console.error("Error saving contact info:", error);
+                alert('Failed to save contact information: ' + error.message);
             }
         });
 
@@ -930,16 +1090,17 @@
 
         async function loadContactSubmissions() {
             contactSubmissionsList.innerHTML = '<p class="text-center text-gray-500">Loading submissions...</p>';
-            const submissions = await fetchData('contactSubmissions');
-            contactSubmissionsList.innerHTML = '';
-            if (submissions) {
-                const submissionArray = Object.values(submissions).sort((a, b) => b.timestamp - a.timestamp); // Sort by newest
-                if (submissionArray.length === 0) {
+            try {
+                const q = query(collection(db, "contactSubmissions"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                contactSubmissionsList.innerHTML = '';
+                if (querySnapshot.empty) {
                     contactSubmissionsList.innerHTML = '<p class="text-center text-gray-500">No contact form submissions yet.</p>';
                     return;
                 }
-                submissionArray.forEach(submission => {
-                    const date = new Date(submission.timestamp).toLocaleString();
+                querySnapshot.forEach(doc => {
+                    const submission = doc.data();
+                    const date = submission.timestamp ? new Date(submission.timestamp.toDate()).toLocaleString() : 'N/A';
                     const submissionItem = document.createElement('div');
                     submissionItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 mb-3';
                     submissionItem.innerHTML = `
@@ -947,11 +1108,32 @@
                         <p><strong class="text-gray-900">Email:</strong> ${submission.email}</p>
                         <p><strong class="text-gray-900">Message:</strong> ${submission.message}</p>
                         <p class="text-xs text-gray-500 mt-2">Submitted on: ${date}</p>
+                        <button data-id="${doc.id}" class="delete-submission-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 mt-2">Delete</button>
                     `;
                     contactSubmissionsList.appendChild(submissionItem);
                 });
-            } else {
-                contactSubmissionsList.innerHTML = '<p class="text-center text-gray-500">No contact form submissions yet.</p>';
+                document.querySelectorAll('.delete-submission-btn').forEach(button => button.addEventListener('click', deleteContactSubmission));
+            } catch (error) {
+                console.error("Error loading contact submissions:", error);
+                contactSubmissionsList.innerHTML = '<p class="text-center text-red-500">Failed to load submissions.</p>';
+            }
+        }
+
+        async function deleteContactSubmission(event) {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to delete submissions.');
+                return;
+            }
+            const id = event.target.dataset.id;
+            if (confirm('Are you sure you want to delete this submission?')) {
+                try {
+                    await deleteDocument('contactSubmissions', id);
+                    alert('Submission deleted successfully!');
+                    loadContactSubmissions();
+                } catch (error) {
+                    console.error("Error deleting submission:", error);
+                    alert('Failed to delete submission: ' + error.message);
+                }
             }
         }
 
@@ -960,28 +1142,51 @@
 
         async function loadNewsletterSubscriptions() {
             newsletterSubscriptionsList.innerHTML = '<p class="text-center text-gray-500">Loading subscriptions...</p>';
-            const subscriptions = await fetchData('newsletterSubscriptions');
-            newsletterSubscriptionsList.innerHTML = '';
-            if (subscriptions) {
-                const subscriptionArray = Object.values(subscriptions).sort((a, b) => b.timestamp - a.timestamp); // Sort by newest
-                if (subscriptionArray.length === 0) {
+            try {
+                const q = query(collection(db, "newsletterSubscriptions"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                newsletterSubscriptionsList.innerHTML = '';
+                if (querySnapshot.empty) {
                     newsletterSubscriptionsList.innerHTML = '<p class="text-center text-gray-500">No newsletter subscriptions yet.</p>';
                     return;
                 }
-                subscriptionArray.forEach(subscription => {
-                    const date = new Date(subscription.timestamp).toLocaleString();
+                querySnapshot.forEach(doc => {
+                    const subscription = doc.data();
+                    const date = subscription.timestamp ? new Date(subscription.timestamp.toDate()).toLocaleString() : 'N/A';
                     const subscriptionItem = document.createElement('div');
                     subscriptionItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 mb-3';
                     subscriptionItem.innerHTML = `
                         <p><strong class="text-gray-900">Email:</strong> ${subscription.email}</p>
                         <p class="text-xs text-gray-500 mt-2">Subscribed on: ${date}</p>
+                        <button data-id="${doc.id}" class="delete-newsletter-sub-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 mt-2">Delete</button>
                     `;
                     newsletterSubscriptionsList.appendChild(subscriptionItem);
                 });
-            } else {
-                newsletterSubscriptionsList.innerHTML = '<p class="text-center text-gray-500">No newsletter subscriptions yet.</p>';
+                document.querySelectorAll('.delete-newsletter-sub-btn').forEach(button => button.addEventListener('click', deleteNewsletterSubscription));
+            } catch (error) {
+                console.error("Error loading newsletter subscriptions:", error);
+                newsletterSubscriptionsList.innerHTML = '<p class="text-center text-red-500">Failed to load subscriptions.</p>';
             }
         }
+
+        async function deleteNewsletterSubscription(event) {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to delete subscriptions.');
+                return;
+            }
+            const id = event.target.dataset.id;
+            if (confirm('Are you sure you want to delete this subscription?')) {
+                try {
+                    await deleteDocument('newsletterSubscriptions', id);
+                    alert('Subscription deleted successfully!');
+                    loadNewsletterSubscriptions();
+                } catch (error) {
+                    console.error("Error deleting subscription:", error);
+                    alert('Failed to delete subscription: ' + error.message);
+                }
+            }
+        }
+
 
         // --- Announcement Management ---
         const announcementActive = document.getElementById('announcement-active');
@@ -989,40 +1194,161 @@
         const saveAnnouncementBtn = document.getElementById('save-announcement-btn');
 
         async function loadAnnouncement() {
-            const announcement = await fetchData('announcement');
-            if (announcement) {
-                announcementActive.checked = announcement.active || false;
-                announcementMessage.value = announcement.message || '';
-            } else {
-                announcementActive.checked = false;
-                announcementMessage.value = '';
+            try {
+                const announcement = await getSingleDoc('announcement', 'current');
+                if (announcement) {
+                    announcementActive.checked = announcement.active || false;
+                    announcementMessage.value = announcement.message || '';
+                } else {
+                    announcementActive.checked = false;
+                    announcementMessage.value = '';
+                    console.log("Announcement document 'current' not found.");
+                }
+            } catch (error) {
+                console.error("Error loading announcement:", error);
+                alert('Failed to load announcement.');
             }
         }
 
         saveAnnouncementBtn.addEventListener('click', async () => {
+            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
+                alert('You do not have permission to save announcements.');
+                return;
+            }
             const announcementData = {
                 active: announcementActive.checked,
                 message: announcementMessage.value
             };
-            const success = await saveData('announcement', announcementData);
-            if (success) {
+            try {
+                await setDocument('announcement', 'current', announcementData);
                 alert('Announcement saved successfully!');
-            } else {
-                alert('Failed to save announcement.');
+            } catch (error) {
+                console.error("Error saving announcement:", error);
+                alert('Failed to save announcement: ' + error.message);
             }
         });
 
-        // Event listeners for loading data when tabs are clicked
-        document.querySelector('[data-tab="tools"]').addEventListener('click', loadTools);
-        document.querySelector('[data-tab="features"]').addEventListener('click', loadFeatures);
-        document.querySelector('[data-tab="faqs"]').addEventListener('click', loadFAQs);
-        document.querySelector('[data-tab="testimonials"]').addEventListener('click', loadTestimonials);
-        document.querySelector('[data-tab="about"]').addEventListener('click', loadAbout);
-        document.querySelector('[data-tab="contactInfo"]').addEventListener('click', loadContactInfo);
-        document.querySelector('[data-tab="contactSubmissions"]').addEventListener('click', loadContactSubmissions);
-        document.querySelector('[data-tab="newsletterSubscriptions"]').addEventListener('click', loadNewsletterSubscriptions);
-        document.querySelector('[data-tab="announcement"]').addEventListener('click', loadAnnouncement);
+        // --- Admin Users Management (Super Admin only) ---
+        const newAdminUid = document.getElementById('new-admin-uid');
+        const newAdminEmail = document.getElementById('new-admin-email');
+        const isSuperAdminCheckbox = document.getElementById('is-super-admin');
+        const isSubAdminCheckbox = document.getElementById('is-sub-admin');
+        const addAdminBtn = document.getElementById('add-admin-btn');
+        const clearAdminFormBtn = document.getElementById('clear-admin-form-btn');
+        const adminUsersList = document.getElementById('admin-users-list');
+
+        async function loadAdminUsers() {
+            adminUsersMessage.classList.add('hidden'); // Hide previous messages
+            if (!currentUserIsSuperAdmin) {
+                adminUsersMessage.textContent = 'Only Super Admins can manage admin users.';
+                adminUsersMessage.classList.remove('hidden');
+                adminUsersList.innerHTML = '';
+                newAdminUid.disabled = true;
+                newAdminEmail.disabled = true;
+                isSuperAdminCheckbox.disabled = true;
+                isSubAdminCheckbox.disabled = true;
+                addAdminBtn.disabled = true;
+                clearAdminFormBtn.disabled = true;
+                return;
+            } else {
+                newAdminUid.disabled = false;
+                newAdminEmail.disabled = false;
+                isSuperAdminCheckbox.disabled = false;
+                isSubAdminCheckbox.disabled = false;
+                addAdminBtn.disabled = false;
+                clearAdminFormBtn.disabled = false;
+            }
+
+            adminUsersList.innerHTML = '<p class="text-center text-gray-500">Loading admin users...</p>';
+            try {
+                const adminUsers = await getCollectionDocs('adminUsers');
+                adminUsersList.innerHTML = '';
+                if (Object.keys(adminUsers).length > 0) {
+                    Object.keys(adminUsers).forEach(uid => {
+                        const admin = adminUsers[uid];
+                        const adminItem = document.createElement('div');
+                        adminItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
+                        adminItem.innerHTML = `
+                            <div>
+                                <h4 class="font-semibold text-gray-900">${admin.email} <span class="text-sm text-gray-600">(${uid})</span></h4>
+                                <p class="text-sm text-gray-600">
+                                    ${admin.isSuperAdmin ? '<span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">Super Admin</span>' : ''}
+                                    ${admin.isSubAdmin ? '<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Sub Admin</span>' : ''}
+                                    ${!admin.isSuperAdmin && !admin.isSubAdmin ? '<span class="text-red-500 text-xs">No Admin Role</span>' : ''}
+                                </p>
+                            </div>
+                            <div class="flex space-x-2">
+                                ${uid !== auth.currentUser.uid ? `<button data-uid="${uid}" class="delete-admin-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>` : '<span class="text-gray-500 text-xs">Cannot delete self</span>'}
+                            </div>
+                        `;
+                        adminUsersList.appendChild(adminItem);
+                    });
+                    document.querySelectorAll('.delete-admin-btn').forEach(button => button.addEventListener('click', deleteAdminUser));
+                } else {
+                    adminUsersList.innerHTML = '<p class="text-center text-gray-500">No admin users found.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading admin users:", error);
+                adminUsersList.innerHTML = '<p class="text-center text-red-500">Failed to load admin users.</p>';
+            }
+        }
+
+        addAdminBtn.addEventListener('click', async () => {
+            if (!currentUserIsSuperAdmin) {
+                alert('You do not have permission to add/edit admin users.');
+                return;
+            }
+            const uid = newAdminUid.value;
+            const email = newAdminEmail.value;
+            const isSuper = isSuperAdminCheckbox.checked;
+            const isSub = isSubAdminCheckbox.checked;
+
+            if (!uid || !email) {
+                alert('Please enter UID and Email for the new admin.');
+                return;
+            }
+
+            try {
+                await setDocument('adminUsers', uid, {
+                    email: email,
+                    isSuperAdmin: isSuper,
+                    isSubAdmin: isSub
+                });
+                alert('Admin user saved successfully!');
+                clearForm([newAdminUid, newAdminEmail, isSuperAdminCheckbox, isSubAdminCheckbox]);
+                loadAdminUsers();
+            } catch (error) {
+                console.error("Error saving admin user:", error);
+                alert('Failed to save admin user: ' + error.message);
+            }
+        });
+
+        clearAdminFormBtn.addEventListener('click', () => {
+            clearForm([newAdminUid, newAdminEmail, isSuperAdminCheckbox, isSubAdminCheckbox]);
+        });
+
+        async function deleteAdminUser(event) {
+            if (!currentUserIsSuperAdmin) {
+                alert('You do not have permission to delete admin users.');
+                return;
+            }
+            const uidToDelete = event.target.dataset.uid;
+            if (uidToDelete === auth.currentUser.uid) {
+                alert("You cannot delete your own admin account from here.");
+                return;
+            }
+            if (confirm(`Are you sure you want to delete admin user with UID: ${uidToDelete}?`)) {
+                try {
+                    await deleteDocument('adminUsers', uidToDelete);
+                    alert('Admin user deleted successfully!');
+                    loadAdminUsers();
+                } catch (error) {
+                    console.error("Error deleting admin user:", error);
+                    alert('Failed to delete admin user: ' + error.message);
+                }
+            }
+        }
 
     </script>
 </body>
-                      </html>
+    </html>
