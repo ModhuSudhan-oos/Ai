@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your SaaS - AI Powered Solutions for Everything</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-inter">
+
+    <div id="announcement-banner" class="hidden bg-blue-600 text-white text-center py-2 relative">
+        <p id="announcement-text" class="px-4"></p>
+        <button id="close-announcement" class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-200 text-xl">&times;</button>
+    </div>
+
+    <header class="bg-white shadow-lg sticky top-0 z-50 transition-transform duration-300">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="index.html" class="text-2xl font-bold text-blue-600">Your SaaS</a>
+            <button data-collapse-toggle="navbar-sticky" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200" aria-controls="navbar-sticky" aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+            </button>
+            <div class="hidden md:flex md:items-center md:space-x-8" id="navbar-sticky">
+                <a href="tools.html" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-600 md:p-0">Tools</a>
+                <a href="features.html" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-600 md:p-0">Features</a>
+                <a href="faq.html" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-600 md:p-0">FAQ</a>
+                <a href="about.html" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-600 md:p-0">About Us</a>
+                <a href="contact.html" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-600 md:p-0">Contact</a>
+                <a href="#" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition-colors duration-300">Get Started</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-20 md:py-32 flex items-center justify-center">
+            <div class="container mx-auto px-4 text-center grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="md:text-left animate-on-scroll">
+                    <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">Unleash Your Potential with AI</h1>
+                    <p class="text-lg md:text-xl mb-8 opacity-90">Revolutionary AI tools designed to simplify your work, boost creativity, and drive innovation.</p>
+                    <a href="tools.html" class="bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg">Explore Our Tools &rarr;</a>
+                </div>
+                <div class="flex justify-center md:justify-end animate-on-scroll" id="hero-animation" style="width: 100%; height: 300px;">
+                    </div>
+            </div>
+        </section>
+
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-on-scroll">Our Powerful AI Tools</h2>
+                <div id="ai-tools-preview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    </div>
+                <div class="text-center mt-12 animate-on-scroll">
+                    <a href="tools.html" class="inline-block bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-lg">View All Tools</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 bg-blue-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-on-scroll">Transform Your Workflow</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-8 animate-on-scroll">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 text-blue-600 text-4xl">💡</div>
+                            <div>
+                                <h3 class="text-2xl font-semibold text-gray-900 mb-2">Boost Creativity</h3>
+                                <p class="text-gray-700">Generate new ideas, overcome writer's block, and explore endless creative possibilities with AI assistance.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 text-blue-600 text-4xl">⏱️</div>
+                            <div>
+                                <h3 class="text-2xl font-semibold text-gray-900 mb-2">Save Time & Resources</h3>
+                                <p class="text-gray-700">Automate repetitive tasks, reduce manual effort, and free up your valuable time for strategic work.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 text-blue-600 text-4xl">📈</div>
+                            <div>
+                                <h3 class="text-2xl font-semibold text-gray-900 mb-2">Enhance Productivity</h3>
+                                <p class="text-gray-700">Achieve more in less time with intelligent tools that streamline your processes and optimize output.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animate-on-scroll">
+                        <img src="/assets/benefits-illustration.svg" alt="Benefits Illustration" class="mx-auto w-full max-w-md">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-on-scroll">What Our Users Say</h2>
+                <div id="testimonials-carousel" class="flex overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+                    </div>
+                <div class="text-center mt-8 text-gray-600 text-sm">
+                    Scroll to see more testimonials &rarr;
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16 text-center">
+            <div class="container mx-auto px-4 animate-on-scroll">
+                <h2 class="text-4xl font-bold mb-4">Ready to Get Started?</h2>
+                <p class="text-xl mb-8 opacity-90">Join thousands of happy users benefiting from our cutting-edge AI platform.</p>
+                <a href="tools.html" class="bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg">Start Your Journey Today &rarr;</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-12">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Your SaaS</h3>
+                <p class="text-sm">Empowering your business with intelligent AI solutions.</p>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="tools.html" class="hover:text-white transition-colors duration-200">Tools</a></li>
+                    <li><a href="features.html" class="hover:text-white transition-colors duration-200">Features</a></li>
+                    <li><a href="faq.html" class="hover:text-white transition-colors duration-200">FAQ</a></li>
+                    <li><a href="about.html" class="hover:text-white transition-colors duration-200">About Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Contact Us</h3>
+                <p class="text-sm mb-2">Email: <a href="mailto:info@yoursaas.com" class="hover:text-white">info@yoursaas.com</a></p>
+                <p class="text-sm mb-2">Phone: +1 (123) 456-7890</p>
+                <div class="flex space-x-4 mt-4">
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook-square"></i></a>
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-twitter-square"></i></a>
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-500 text-sm">
+            &copy; 2025 Your SaaS. All rights reserved.
+        </div>
+    </footer>
+
+    <div id="cookie-consent" class="hidden fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-4 flex flex-col md:flex-row items-center justify-between z-[100] shadow-lg">
+        <p class="text-sm mb-2 md:mb-0 text-center md:text-left">
+            We use cookies to ensure you get the best experience on our website. By continuing to use this site, you agree to our <a href="#" class="text-blue-400 hover:underline">cookie policy</a>.
+        </p>
+        <button id="accept-cookies" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-300">
+            Accept
+        </button>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
