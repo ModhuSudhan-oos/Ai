@@ -3,1352 +3,402 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Admin Panel</title>
+    <title>Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .tab-button.active {
-            background-color: #3B82F6;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-    <div id="login-section" class="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600">
-        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md text-center">
-            <h2 class="text-3xl font-bold mb-6 text-gray-900">Admin Login</h2>
-            <input type="email" id="login-email" placeholder="Email" class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-            <input type="password" id="login-password" placeholder="Password" class="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-            <button id="login-btn" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-lg">Login</button>
-            <p id="login-message" class="text-red-500 mt-4"></p>
-        </div>
-    </div>
-
-    <div id="admin-panel-section" class="hidden min-h-screen flex flex-col">
-        <header class="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center">
-            <h1 class="text-2xl font-bold">Admin Dashboard</h1>
-            <div class="flex items-center space-x-4">
-                <span id="admin-email-display" class="font-medium"></span>
-                <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
+    <section id="login-section" class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">Admin Login</h2>
+        <form id="login-form">
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
-        </header>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="flex items-center justify-between">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Login
+                </button>
+            </div>
+        </form>
+    </section>
 
-        <div class="flex-1 flex flex-col md:flex-row">
-            <aside class="w-full md:w-64 bg-gray-800 p-4 text-white">
-                <nav class="space-y-2">
-                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200 active" data-tab="tools">Tools</button>
-                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="features">Features</button>
-                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="faqs">FAQs</button>
-                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="testimonials">Testimonials</button>
-                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="about">About Us</button>
-                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="contactInfo">Contact Info</button>
-                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="contactSubmissions">Contact Submissions</button>
-                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="newsletterSubscriptions">Newsletter Subs</button>
-                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="announcement">Announcement</button>
-                    <button class="tab-button w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200" data-tab="adminUsers">Admin Users</button>
-                </nav>
-            </aside>
+    <section id="admin-content" class="hidden bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
+        <h2 class="text-2xl font-bold mb-6 text-center">Admin Dashboard</h2>
+        <button id="logout-button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4">Logout</button>
 
-            <main class="flex-1 p-6 bg-gray-100">
-                <div id="tools-tab" class="tab-content active-tab">
-                    <h2 class="text-3xl font-bold mb-6">Manage AI Tools</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                        <h3 class="text-xl font-semibold mb-4">Add/Edit Tool</h3>
-                        <input type="hidden" id="tool-id">
-                        <input type="text" id="tool-title" placeholder="Tool Title" class="w-full p-2 mb-3 border rounded-lg">
-                        <textarea id="tool-description" placeholder="Tool Description" class="w-full p-2 mb-3 border rounded-lg"></textarea>
-                        <input type="text" id="tool-image" placeholder="Image URL (e.g., /assets/tool.png)" class="w-full p-2 mb-3 border rounded-lg">
-                        <input type="text" id="tool-url" placeholder="Launch URL (e.g., https://example.com/tool)" class="w-full p-2 mb-3 border rounded-lg">
-                        <input type="text" id="tool-category" placeholder="Category (e.g., writing, design)" class="w-full p-2 mb-3 border rounded-lg">
-                        <input type="text" id="tool-iframeUrl" placeholder="iFrame URL (Optional)" class="w-full p-2 mb-3 border rounded-lg">
-                        <input type="text" id="tool-features" placeholder="Features (comma separated, e.g., Feature 1, Feature 2)" class="w-full p-2 mb-3 border rounded-lg">
-                        <div class="flex space-x-4">
-                            <button id="save-tool-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Tool</button>
-                            <button id="clear-tool-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
-                        </div>
-                    </div>
+        <h3 class="text-xl font-semibold mb-4">Add New Tool</h3>
+        <form id="add-tool-form" class="mb-8">
+            <div class="mb-4">
+                <label for="tool-name" class="block text-gray-700 text-sm font-bold mb-2">Tool Name:</label>
+                <input type="text" id="tool-name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="mb-4">
+                <label for="tool-description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
+                <textarea id="tool-description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="tool-image" class="block text-gray-700 text-sm font-bold mb-2">Image URL:</label>
+                <input type="url" id="tool-image" name="image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="mb-4">
+                <label for="tool-link" class="block text-gray-700 text-sm font-bold mb-2">Link:</label>
+                <input type="url" id="tool-link" name="link" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add Tool</button>
+        </form>
 
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-4">Existing Tools</h3>
-                        <div id="tools-list" class="space-y-4">
-                            <p class="text-center text-gray-500">Loading tools...</p>
-                        </div>
-                    </div>
-                </div>
+        <h3 class="text-xl font-semibold mb-4">Existing Tools</h3>
+        <div id="tools-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            </div>
 
-                <div id="features-tab" class="tab-content hidden">
-                    <h2 class="text-3xl font-bold mb-6">Manage Features</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                        <h3 class="text-xl font-semibold mb-4">Add/Edit Feature</h3>
-                        <input type="hidden" id="feature-id">
-                        <input type="text" id="feature-title" placeholder="Feature Title" class="w-full p-2 mb-3 border rounded-lg">
-                        <textarea id="feature-description" placeholder="Feature Description" class="w-full p-2 mb-3 border rounded-lg"></textarea>
-                        <input type="text" id="feature-icon" placeholder="Icon (e.g., ✨ or /assets/icon.svg)" class="w-full p-2 mb-3 border rounded-lg">
-                        <div class="flex space-x-4">
-                            <button id="save-feature-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Feature</button>
-                            <button id="clear-feature-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-4">Existing Features</h3>
-                        <div id="features-list" class="space-y-4">
-                            <p class="text-center text-gray-500">Loading features...</p>
-                        </div>
-                    </div>
-                </div>
+        <h3 class="text-xl font-semibold mt-8 mb-4">Add New Feature</h3>
+        <form id="add-feature-form" class="mb-8">
+            <div class="mb-4">
+                <label for="feature-name" class="block text-gray-700 text-sm font-bold mb-2">Feature Name:</label>
+                <input type="text" id="feature-name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="mb-4">
+                <label for="feature-description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
+                <textarea id="feature-description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="feature-image" class="block text-gray-700 text-sm font-bold mb-2">Image URL:</label>
+                <input type="url" id="feature-image" name="image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add Feature</button>
+        </form>
 
-                <div id="faqs-tab" class="tab-content hidden">
-                    <h2 class="text-3xl font-bold mb-6">Manage FAQs</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                        <h3 class="text-xl font-semibold mb-4">Add/Edit FAQ</h3>
-                        <input type="hidden" id="faq-id">
-                        <input type="text" id="faq-question" placeholder="Question" class="w-full p-2 mb-3 border rounded-lg">
-                        <textarea id="faq-answer" placeholder="Answer" class="w-full p-2 mb-3 border rounded-lg"></textarea>
-                        <div class="flex space-x-4">
-                            <button id="save-faq-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save FAQ</button>
-                            <button id="clear-faq-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-4">Existing FAQs</h3>
-                        <div id="faqs-list" class="space-y-4">
-                            <p class="text-center text-gray-500">Loading FAQs...</p>
-                        </div>
-                    </div>
-                </div>
+        <h3 class="text-xl font-semibold mb-4">Existing Features</h3>
+        <div id="features-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            </div>
 
-                <div id="testimonials-tab" class="tab-content hidden">
-                    <h2 class="text-3xl font-bold mb-6">Manage Testimonials</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                        <h3 class="text-xl font-semibold mb-4">Add/Edit Testimonial</h3>
-                        <input type="hidden" id="testimonial-id">
-                        <input type="text" id="testimonial-name" placeholder="Author Name" class="w-full p-2 mb-3 border rounded-lg">
-                        <textarea id="testimonial-quote" placeholder="Testimonial Quote" class="w-full p-2 mb-3 border rounded-lg"></textarea>
-                        <div class="flex space-x-4">
-                            <button id="save-testimonial-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Testimonial</button>
-                            <button id="clear-testimonial-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-4">Existing Testimonials</h3>
-                        <div id="testimonials-list" class="space-y-4">
-                            <p class="text-center text-gray-500">Loading testimonials...</p>
-                        </div>
-                    </div>
-                </div>
+        <h3 class="text-xl font-semibold mt-8 mb-4">Add New FAQ</h3>
+        <form id="add-faq-form" class="mb-8">
+            <div class="mb-4">
+                <label for="faq-question" class="block text-gray-700 text-sm font-bold mb-2">Question:</label>
+                <input type="text" id="faq-question" name="question" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="mb-4">
+                <label for="faq-answer" class="block text-gray-700 text-sm font-bold mb-2">Answer:</label>
+                <textarea id="faq-answer" name="answer" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add FAQ</button>
+        </form>
 
-                <div id="about-tab" class="tab-content hidden">
-                    <h2 class="text-3xl font-bold mb-6">Manage About Us Page</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                        <h3 class="text-xl font-semibold mb-4">Mission & Story</h3>
-                        <label for="about-mission" class="block text-lg font-medium text-gray-700 mb-2">Our Mission</label>
-                        <textarea id="about-mission" placeholder="Our company mission" class="w-full p-2 mb-3 border rounded-lg"></textarea>
-                        <label for="about-story" class="block text-lg font-medium text-gray-700 mb-2">Our Story</label>
-                        <textarea id="about-story" placeholder="Our company story" class="w-full p-2 mb-3 border rounded-lg"></textarea>
-                        <button id="save-about-text-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Text</button>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-4">Manage Team Members</h3>
-                        <input type="hidden" id="team-member-id">
-                        <input type="text" id="team-member-name" placeholder="Member Name" class="w-full p-2 mb-3 border rounded-lg">
-                        <input type="text" id="team-member-role" placeholder="Member Role" class="w-full p-2 mb-3 border rounded-lg">
-                        <input type="text" id="team-member-image" placeholder="Image URL (e.g., /assets/team-alice.jpg)" class="w-full p-2 mb-3 border rounded-lg">
-                        <div class="flex space-x-4">
-                            <button id="save-team-member-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Member</button>
-                            <button id="clear-team-member-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
-                        </div>
-                        <div id="team-members-list" class="space-y-4 mt-6">
-                            <p class="text-center text-gray-500">Loading team members...</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="contactInfo-tab" class="tab-content hidden">
-                    <h2 class="text-3xl font-bold mb-6">Manage Contact Information</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <label for="contact-email" class="block text-lg font-medium text-gray-700 mb-2">Email</label>
-                        <input type="email" id="contact-email" placeholder="Contact Email" class="w-full p-2 mb-3 border rounded-lg">
-                        <label for="contact-phone" class="block text-lg font-medium text-gray-700 mb-2">Phone</label>
-                        <input type="tel" id="contact-phone" placeholder="Contact Phone" class="w-full p-2 mb-3 border rounded-lg">
-                        <label for="contact-address" class="block text-lg font-medium text-gray-700 mb-2">Address</label>
-                        <textarea id="contact-address" placeholder="Company Address" class="w-full p-2 mb-3 border rounded-lg"></textarea>
-                        <h3 class="text-xl font-semibold mt-4 mb-2">Social Media Links</h3>
-                        <input type="url" id="social-facebook" placeholder="Facebook URL" class="w-full p-2 mb-3 border rounded-lg">
-                        <input type="url" id="social-twitter" placeholder="Twitter URL" class="w-full p-2 mb-3 border rounded-lg">
-                        <input type="url" id="social-linkedin" placeholder="LinkedIn URL" class="w-full p-2 mb-3 border rounded-lg">
-                        <button id="save-contact-info-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Contact Info</button>
-                    </div>
-                </div>
-
-                <div id="contactSubmissions-tab" class="tab-content hidden">
-                    <h2 class="text-3xl font-bold mb-6">Contact Form Submissions</h2>
-                    <div id="contact-submissions-list" class="bg-white p-6 rounded-lg shadow-md">
-                        <p class="text-center text-gray-500">Loading submissions...</p>
-                    </div>
-                </div>
-
-                <div id="newsletterSubscriptions-tab" class="tab-content hidden">
-                    <h2 class="text-3xl font-bold mb-6">Newsletter Subscriptions</h2>
-                    <div id="newsletter-subscriptions-list" class="bg-white p-6 rounded-lg shadow-md">
-                        <p class="text-center text-gray-500">Loading subscriptions...</p>
-                    </div>
-                </div>
-
-                <div id="announcement-tab" class="tab-content hidden">
-                    <h2 class="text-3xl font-bold mb-6">Manage Announcement Banner</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="mb-4">
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" id="announcement-active" class="form-checkbox h-5 w-5 text-blue-600">
-                                <span class="ml-2 text-gray-700 font-medium">Activate Announcement</span>
-                            </label>
-                        </div>
-                        <label for="announcement-message" class="block text-lg font-medium text-gray-700 mb-2">Announcement Message</label>
-                        <textarea id="announcement-message" placeholder="Type your announcement here..." class="w-full p-2 mb-3 border rounded-lg"></textarea>
-                        <button id="save-announcement-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Save Announcement</button>
-                    </div>
-                </div>
-
-                <div id="adminUsers-tab" class="tab-content hidden">
-                    <h2 class="text-3xl font-bold mb-6">Manage Admin Users</h2>
-                    <p id="admin-users-message" class="text-red-600 mb-4 hidden">You do not have permission to manage admin users.</p>
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                        <h3 class="text-xl font-semibold mb-4">Add New Admin User</h3>
-                        <input type="text" id="new-admin-uid" placeholder="User UID (from Firebase Auth)" class="w-full p-2 mb-3 border rounded-lg">
-                        <input type="email" id="new-admin-email" placeholder="User Email" class="w-full p-2 mb-3 border rounded-lg">
-                        <label class="inline-flex items-center mb-3">
-                            <input type="checkbox" id="is-super-admin" class="form-checkbox h-5 w-5 text-blue-600">
-                            <span class="ml-2 text-gray-700 font-medium">Is Super Admin?</span>
-                        </label>
-                        <label class="inline-flex items-center mb-3 ml-4">
-                            <input type="checkbox" id="is-sub-admin" class="form-checkbox h-5 w-5 text-blue-600">
-                            <span class="ml-2 text-gray-700 font-medium">Is Sub Admin?</span>
-                        </label>
-                        <div class="flex space-x-4 mt-3">
-                            <button id="add-admin-btn" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">Add Admin</button>
-                            <button id="clear-admin-form-btn" class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500">Clear Form</button>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-4">Existing Admin Users</h3>
-                        <div id="admin-users-list" class="space-y-4">
-                            <p class="text-center text-gray-500">Loading admin users...</p>
-                        </div>
-                    </div>
-                </div>
-
-            </main>
-        </div>
-    </div>
+        <h3 class="text-xl font-semibold mb-4">Existing FAQs</h3>
+        <div id="faqs-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            </div>
+    </section>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-        import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, deleteDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
-        // --- Your Firebase Config ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVpddOtX1yRxslNxh8yz3SJq53eUYhkZ0",
-            authDomain: "next-gen-186aa.firebaseapp.com",
-            projectId: "next-gen-186aa",
-            storageBucket: "next-gen-186aa.firebasestorage.app",
-            messagingSenderId: "338569531164",
-            appId: "1:338569531164:web:932df077b59a0a371b34d9",
-            measurementId: "G-7GCT5KHFQ0"
-        };
-        // --- END Firebase Config ---
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBVpddOtX1yRxslNxh8yz3SJq53eUYhkZ0",
+  authDomain: "next-gen-186aa.firebaseapp.com",
+  projectId: "next-gen-186aa",
+  storageBucket: "next-gen-186aa.firebasestorage.app",
+  messagingSenderId: "338569531164",
+  appId: "1:338569531164:web:932df077b59a0a371b34d9",
+  measurementId: "G-7GCT5KHFQ0"
+};
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app); // Get Firestore instance
+        const db = getFirestore(app);
 
-        const superAdminUID = 'PjtAITuXjLYN6A1NX4pzy9KEZwJ3'; // Your super admin UID
-        const subAdminUID = 'vuY4TfTHdyRmltDUWCQerWGEyEG3'; // Your sub admin UID
-
-        let currentUserIsSuperAdmin = false;
-        let currentUserIsSubAdmin = false;
+        // Admin UIDs - Replace with your actual UIDs
+        const superAdminUID = "PjtAITuXjLYN6A1NX4pzy9KEZwJ3"; // e.g., "someSuperAdminUID123"
+        const subAdminUID = "vuY4TfTHdyRmltDUWCQerWGEyEG3";   // e.g., "someSubAdminUID456"
 
         const loginSection = document.getElementById('login-section');
-        const adminPanelSection = document.getElementById('admin-panel-section');
-        const loginEmailInput = document.getElementById('login-email');
-        const loginPasswordInput = document.getElementById('login-password');
-        const loginBtn = document.getElementById('login-btn');
-        const loginMessage = document.getElementById('login-message');
-        const logoutBtn = document.getElementById('logout-btn');
-        const adminEmailDisplay = document.getElementById('admin-email-display');
-        const adminUsersMessage = document.getElementById('admin-users-message'); // For permission message
-
-        // Tab Management
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
-
-        tabButtons.forEach(button => {
-            button.addEventListener('click', async () => {
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.classList.add('hidden'));
-
-                button.classList.add('active');
-                const tabId = button.dataset.tab;
-                document.getElementById(`${tabId}-tab`).classList.remove('hidden');
-
-                // Load data for the clicked tab
-                switch (tabId) {
-                    case 'tools': await loadTools(); break;
-                    case 'features': await loadFeatures(); break;
-                    case 'faqs': await loadFAQs(); break;
-                    case 'testimonials': await loadTestimonials(); break;
-                    case 'about': await loadAbout(); break;
-                    case 'contactInfo': await loadContactInfo(); break;
-                    case 'contactSubmissions': await loadContactSubmissions(); break;
-                    case 'newsletterSubscriptions': await loadNewsletterSubscriptions(); break;
-                    case 'announcement': await loadAnnouncement(); break;
-                    case 'adminUsers': await loadAdminUsers(); break;
-                    default: console.log("Unknown tab:", tabId);
-                }
-            });
-        });
-
-        // Firebase Auth State Listener
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // Check if the logged-in user is an admin
-                const adminDoc = await getDoc(doc(db, "adminUsers", user.uid));
-                if (adminDoc.exists()) {
-                    const adminData = adminDoc.data();
-                    currentUserIsSuperAdmin = adminData.isSuperAdmin || false;
-                    currentUserIsSubAdmin = adminData.isSubAdmin || false;
-
-                    if (currentUserIsSuperAdmin || currentUserIsSubAdmin) {
-                        loginSection.classList.add('hidden');
-                        adminPanelSection.classList.remove('hidden');
-                        adminEmailDisplay.textContent = user.email;
-                        loadAdminDataOnLogin(); // Load initial tab data
-                    } else {
-                        // User exists in adminUsers but is neither super nor sub admin
-                        await signOut(auth); // Force logout
-                        loginMessage.textContent = 'Your account is not authorized to access this panel. Please contact support.';
-                        loginSection.classList.remove('hidden');
-                        adminPanelSection.classList.add('hidden');
-                    }
-                } else {
-                    // User is logged in but not found in adminUsers collection
-                    await signOut(auth); // Force logout
-                    loginMessage.textContent = 'Your account is not registered as an administrator. Please contact support.';
-                    loginSection.classList.remove('hidden');
-                    adminPanelSection.classList.add('hidden');
-                }
-            } else {
-                loginSection.classList.remove('hidden');
-                adminPanelSection.classList.add('hidden');
-                adminEmailDisplay.textContent = '';
-                loginMessage.textContent = ''; // Clear message on logout/no user
-                currentUserIsSuperAdmin = false;
-                currentUserIsSubAdmin = false;
-            }
-        });
-
-        // Login Logic
-        loginBtn.addEventListener('click', async () => {
-            const email = loginEmailInput.value;
-            const password = loginPasswordInput.value;
-            loginMessage.textContent = '';
-
-            if (!email || !password) {
-                loginMessage.textContent = 'Please enter both email and password.';
-                return;
-            }
-
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                // Auth state listener will handle UI update and admin check
-            } catch (error) {
-                console.error("Login error:", error);
-                loginMessage.textContent = `Login failed: ${error.message}`;
-            }
-        });
-
-        // Logout Logic
-        logoutBtn.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-            } catch (error) {
-                console.error("Logout error:", error);
-                alert("Logout failed: " + error.message);
-            }
-        });
-
-        // --- Data Management Functions ---
-
-        // Helper to fetch documents from a collection
-        async function getCollectionDocs(collectionName) {
-            const querySnapshot = await getDocs(collection(db, collectionName));
-            const data = {};
-            querySnapshot.forEach(doc => {
-                data[doc.id] = doc.data();
-            });
-            return data;
-        }
-
-        // Helper to fetch a single document
-        async function getSingleDoc(collectionName, docId) {
-            const docRef = doc(db, collectionName, docId);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                return docSnap.data();
-            }
-            return null;
-        }
-
-        // Helper to save/update a document by ID
-        async function setDocument(collectionName, docId, data) {
-            const docRef = doc(db, collectionName, docId);
-            await setDoc(docRef, data);
-        }
-
-        // Helper to add a new document (with auto-generated ID)
-        async function addDocument(collectionName, data) {
-            const docRef = await addDoc(collection(db, collectionName), data);
-            return docRef.id;
-        }
-
-        // Helper to delete a document
-        async function deleteDocument(collectionName, docId) {
-            const docRef = doc(db, collectionName, docId);
-            await deleteDoc(docRef);
-        }
-
-        // --- General UI Utilities ---
-        function clearForm(formInputs) {
-            formInputs.forEach(input => {
-                if (input.type === 'checkbox') {
-                    input.checked = false;
-                } else {
-                    input.value = '';
-                }
-            });
-        }
-
-        // --- Load & Render Functions for Each Tab ---
-
-        async function loadAdminDataOnLogin() {
-            // Load and render data for the currently active tab initially
-            const activeTabButton = document.querySelector('.tab-button.active');
-            if (activeTabButton) {
-                const tabName = activeTabButton.dataset.tab;
-                switch (tabName) {
-                    case 'tools': await loadTools(); break;
-                    case 'features': await loadFeatures(); break;
-                    case 'faqs': await loadFAQs(); break;
-                    case 'testimonials': await loadTestimonials(); break;
-                    case 'about': await loadAbout(); break;
-                    case 'contactInfo': await loadContactInfo(); break;
-                    case 'contactSubmissions': await loadContactSubmissions(); break;
-                    case 'newsletterSubscriptions': await loadNewsletterSubscriptions(); break;
-                    case 'announcement': await loadAnnouncement(); break;
-                    case 'adminUsers': await loadAdminUsers(); break;
-                    default: console.log("Unknown tab:", tabName);
-                }
-            }
-        }
-
-        // --- Tools Management ---
-        const toolId = document.getElementById('tool-id');
-        const toolTitle = document.getElementById('tool-title');
-        const toolDescription = document.getElementById('tool-description');
-        const toolImage = document.getElementById('tool-image');
-        const toolUrl = document.getElementById('tool-url');
-        const toolCategory = document.getElementById('tool-category');
-        const toolIframeUrl = document.getElementById('tool-iframeUrl');
-        const toolFeatures = document.getElementById('tool-features');
-        const saveToolBtn = document.getElementById('save-tool-btn');
-        const clearToolBtn = document.getElementById('clear-tool-btn');
+        const adminContent = document.getElementById('admin-content');
+        const loginForm = document.getElementById('login-form');
+        const logoutButton = document.getElementById('logout-button');
+        const addToolForm = document.getElementById('add-tool-form');
         const toolsList = document.getElementById('tools-list');
-
-        async function loadTools() {
-            toolsList.innerHTML = '<p class="text-center text-gray-500">Loading tools...</p>';
-            try {
-                const tools = await getCollectionDocs('tools');
-                toolsList.innerHTML = '';
-                if (Object.keys(tools).length > 0) {
-                    Object.keys(tools).forEach(key => {
-                        const tool = tools[key];
-                        const toolItem = document.createElement('div');
-                        toolItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
-                        toolItem.innerHTML = `
-                            <div>
-                                <h4 class="font-semibold text-gray-900">${tool.title}</h4>
-                                <p class="text-sm text-gray-600">${tool.description}</p>
-                                <p class="text-xs text-gray-500">Category: ${tool.category || 'N/A'}</p>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button data-id="${key}" class="edit-tool-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
-                                <button data-id="${key}" class="delete-tool-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
-                            </div>
-                        `;
-                        toolsList.appendChild(toolItem);
-                    });
-                    document.querySelectorAll('.edit-tool-btn').forEach(button => button.addEventListener('click', editTool));
-                    document.querySelectorAll('.delete-tool-btn').forEach(button => button.addEventListener('click', deleteTool));
-                } else {
-                    toolsList.innerHTML = '<p class="text-center text-gray-500">No tools found.</p>';
-                }
-            } catch (error) {
-                console.error("Error loading tools:", error);
-                toolsList.innerHTML = '<p class="text-center text-red-500">Failed to load tools.</p>';
-            }
-        }
-
-        saveToolBtn.addEventListener('click', async () => {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to save tools.');
-                return;
-            }
-            const id = toolId.value;
-            const featuresArray = toolFeatures.value.split(',').map(f => f.trim()).filter(f => f !== '');
-            const toolData = {
-                title: toolTitle.value,
-                description: toolDescription.value,
-                image: toolImage.value,
-                url: toolUrl.value,
-                category: toolCategory.value,
-                iframeUrl: toolIframeUrl.value,
-                features: featuresArray.length > 0 ? featuresArray : null
-            };
-
-            try {
-                if (id) {
-                    await setDocument('tools', id, toolData);
-                } else {
-                    const newId = toolData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '');
-                    await setDocument('tools', newId, toolData); // Use a slug as ID for new tools
-                }
-                alert('Tool saved successfully!');
-                clearForm([toolId, toolTitle, toolDescription, toolImage, toolUrl, toolCategory, toolIframeUrl, toolFeatures]);
-                loadTools();
-            } catch (error) {
-                console.error("Error saving tool:", error);
-                alert('Failed to save tool: ' + error.message);
-            }
-        });
-
-        clearToolBtn.addEventListener('click', () => {
-            clearForm([toolId, toolTitle, toolDescription, toolImage, toolUrl, toolCategory, toolIframeUrl, toolFeatures]);
-        });
-
-        async function editTool(event) {
-            const id = event.target.dataset.id;
-            const tool = await getSingleDoc('tools', id);
-            if (tool) {
-                toolId.value = id;
-                toolTitle.value = tool.title || '';
-                toolDescription.value = tool.description || '';
-                toolImage.value = tool.image || '';
-                toolUrl.value = tool.url || '';
-                toolCategory.value = tool.category || '';
-                toolIframeUrl.value = tool.iframeUrl || '';
-                toolFeatures.value = Array.isArray(tool.features) ? tool.features.join(', ') : '';
-                document.getElementById('tools-tab').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                alert("Tool not found for editing.");
-            }
-        }
-
-        async function deleteTool(event) {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to delete tools.');
-                return;
-            }
-            const id = event.target.dataset.id;
-            if (confirm('Are you sure you want to delete this tool?')) {
-                try {
-                    await deleteDocument('tools', id);
-                    alert('Tool deleted successfully!');
-                    loadTools();
-                } catch (error) {
-                    console.error("Error deleting tool:", error);
-                    alert('Failed to delete tool: ' + error.message);
-                }
-            }
-        }
-
-        // --- Features Management ---
-        const featureId = document.getElementById('feature-id');
-        const featureTitle = document.getElementById('feature-title');
-        const featureDescription = document.getElementById('feature-description');
-        const featureIcon = document.getElementById('feature-icon');
-        const saveFeatureBtn = document.getElementById('save-feature-btn');
-        const clearFeatureBtn = document.getElementById('clear-feature-btn');
+        const addFeatureForm = document.getElementById('add-feature-form');
         const featuresList = document.getElementById('features-list');
-
-        async function loadFeatures() {
-            featuresList.innerHTML = '<p class="text-center text-gray-500">Loading features...</p>';
-            try {
-                const features = await getCollectionDocs('features');
-                featuresList.innerHTML = '';
-                if (Object.keys(features).length > 0) {
-                    Object.keys(features).forEach(key => {
-                        const feature = features[key];
-                        const featureItem = document.createElement('div');
-                        featureItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
-                        featureItem.innerHTML = `
-                            <div>
-                                <h4 class="font-semibold text-gray-900">${feature.icon} ${feature.title}</h4>
-                                <p class="text-sm text-gray-600">${feature.description}</p>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button data-id="${key}" class="edit-feature-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
-                                <button data-id="${key}" class="delete-feature-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
-                            </div>
-                        `;
-                        featuresList.appendChild(featureItem);
-                    });
-                    document.querySelectorAll('.edit-feature-btn').forEach(button => button.addEventListener('click', editFeature));
-                    document.querySelectorAll('.delete-feature-btn').forEach(button => button.addEventListener('click', deleteFeature));
-                } else {
-                    featuresList.innerHTML = '<p class="text-center text-gray-500">No features found.</p>';
-                }
-            } catch (error) {
-                console.error("Error loading features:", error);
-                featuresList.innerHTML = '<p class="text-center text-red-500">Failed to load features.</p>';
-            }
-        }
-
-        saveFeatureBtn.addEventListener('click', async () => {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to save features.');
-                return;
-            }
-            const id = featureId.value;
-            const featureData = {
-                title: featureTitle.value,
-                description: featureDescription.value,
-                icon: featureIcon.value
-            };
-
-            try {
-                if (id) {
-                    await setDocument('features', id, featureData);
-                } else {
-                    const newId = featureData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '');
-                    await setDocument('features', newId, featureData);
-                }
-                alert('Feature saved successfully!');
-                clearForm([featureId, featureTitle, featureDescription, featureIcon]);
-                loadFeatures();
-            } catch (error) {
-                console.error("Error saving feature:", error);
-                alert('Failed to save feature: ' + error.message);
-            }
-        });
-
-        clearFeatureBtn.addEventListener('click', () => {
-            clearForm([featureId, featureTitle, featureDescription, featureIcon]);
-        });
-
-        async function editFeature(event) {
-            const id = event.target.dataset.id;
-            const feature = await getSingleDoc('features', id);
-            if (feature) {
-                featureId.value = id;
-                featureTitle.value = feature.title || '';
-                featureDescription.value = feature.description || '';
-                featureIcon.value = feature.icon || '';
-                document.getElementById('features-tab').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                alert("Feature not found for editing.");
-            }
-        }
-
-        async function deleteFeature(event) {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to delete features.');
-                return;
-            }
-            const id = event.target.dataset.id;
-            if (confirm('Are you sure you want to delete this feature?')) {
-                try {
-                    await deleteDocument('features', id);
-                    alert('Feature deleted successfully!');
-                    loadFeatures();
-                } catch (error) {
-                    console.error("Error deleting feature:", error);
-                    alert('Failed to delete feature: ' + error.message);
-                }
-            }
-        }
-
-        // --- FAQs Management ---
-        const faqId = document.getElementById('faq-id');
-        const faqQuestion = document.getElementById('faq-question');
-        const faqAnswer = document.getElementById('faq-answer');
-        const saveFaqBtn = document.getElementById('save-faq-btn');
-        const clearFaqBtn = document.getElementById('clear-faq-btn');
+        const addFaqForm = document.getElementById('add-faq-form');
         const faqsList = document.getElementById('faqs-list');
 
-        async function loadFAQs() {
-            faqsList.innerHTML = '<p class="text-center text-gray-500">Loading FAQs...</p>';
-            try {
-                const faqs = await getCollectionDocs('faqs');
-                faqsList.innerHTML = '';
-                if (Object.keys(faqs).length > 0) {
-                    Object.keys(faqs).forEach(key => {
-                        const faq = faqs[key];
-                        const faqItem = document.createElement('div');
-                        faqItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
-                        faqItem.innerHTML = `
-                            <div>
-                                <h4 class="font-semibold text-gray-900">${faq.question}</h4>
-                                <p class="text-sm text-gray-600">${faq.answer}</p>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button data-id="${key}" class="edit-faq-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
-                                <button data-id="${key}" class="delete-faq-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
-                            </div>
-                        `;
-                        faqsList.appendChild(faqItem);
-                    });
-                    document.querySelectorAll('.edit-faq-btn').forEach(button => button.addEventListener('click', editFAQ));
-                    document.querySelectorAll('.delete-faq-btn').forEach(button => button.addEventListener('click', deleteFAQ));
-                } else {
-                    faqsList.innerHTML = '<p class="text-center text-gray-500">No FAQs found.</p>';
-                }
-            } catch (error) {
-                console.error("Error loading FAQs:", error);
-                faqsList.innerHTML = '<p class="text-center text-red-500">Failed to load FAQs.</p>';
-            }
-        }
-
-        saveFaqBtn.addEventListener('click', async () => {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to save FAQs.');
-                return;
-            }
-            const id = faqId.value;
-            const faqData = {
-                question: faqQuestion.value,
-                answer: faqAnswer.value
-            };
-
-            try {
-                if (id) {
-                    await setDocument('faqs', id, faqData);
-                } else {
-                    await addDocument('faqs', faqData); // Firestore auto-generates ID for addDoc
-                }
-                alert('FAQ saved successfully!');
-                clearForm([faqId, faqQuestion, faqAnswer]);
-                loadFAQs();
-            } catch (error) {
-                console.error("Error saving FAQ:", error);
-                alert('Failed to save FAQ: ' + error.message);
-            }
-        });
-
-        clearFaqBtn.addEventListener('click', () => {
-            clearForm([faqId, faqQuestion, faqAnswer]);
-        });
-
-        async function editFAQ(event) {
-            const id = event.target.dataset.id;
-            const faq = await getSingleDoc('faqs', id);
-            if (faq) {
-                faqId.value = id;
-                faqQuestion.value = faq.question || '';
-                faqAnswer.value = faq.answer || '';
-                document.getElementById('faqs-tab').scrollIntoView({ behavior: 'smooth' });
+        // Function to check admin status and display content
+        const checkAdminStatus = (user) => {
+            console.log("checkAdminStatus called for user:", user ? user.uid : "null");
+            if (user && (user.uid === superAdminUID || user.uid === subAdminUID)) {
+                console.log("User is an admin. Displaying admin content.");
+                loginSection.style.display = 'none';
+                adminContent.style.display = 'block';
+                fetchAndRenderTools();
+                fetchAndRenderFeatures();
+                fetchAndRenderFAQs();
             } else {
-                alert("FAQ not found for editing.");
+                console.log("User is NOT an admin or not logged in. Displaying login section.");
+                alert("আপনার অ্যাডমিন প্যানেলে প্রবেশের অনুমতি নেই।");
+                logoutUser(); // If someone tries to access admin panel without admin UID, log them out
             }
-        }
+        };
 
-        async function deleteFAQ(event) {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to delete FAQs.');
-                return;
+        // Auth state change listener
+        onAuthStateChanged(auth, (user) => {
+            console.log("onAuthStateChanged fired. User:", user ? user.uid : "null");
+            if (user) {
+                checkAdminStatus(user);
+            } else {
+                console.log("User is logged out. Showing login form.");
+                loginSection.style.display = 'block';
+                adminContent.style.display = 'none';
             }
-            const id = event.target.dataset.id;
-            if (confirm('Are you sure you want to delete this FAQ?')) {
+        });
+
+        // Login Form Submission
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = loginForm['email'].value;
+                const password = loginForm['password'].value;
+                console.log("Attempting login with email:", email);
+
                 try {
-                    await deleteDocument('faqs', id);
-                    alert('FAQ deleted successfully!');
-                    loadFAQs();
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    console.log('Login successful! User UID:', user.uid);
+                    // onAuthStateChanged will handle displaying content
                 } catch (error) {
-                    console.error("Error deleting FAQ:", error);
-                    alert('Failed to delete FAQ: ' + error.message);
+                    console.error('Login failed:', error.code, error.message);
+                    alert('লগইন ব্যর্থ হয়েছে: ' + error.message);
                 }
-            }
+            });
         }
 
-        // --- Testimonials Management ---
-        const testimonialId = document.getElementById('testimonial-id');
-        const testimonialName = document.getElementById('testimonial-name');
-        const testimonialQuote = document.getElementById('testimonial-quote');
-        const saveTestimonialBtn = document.getElementById('save-testimonial-btn');
-        const clearTestimonialBtn = document.getElementById('clear-testimonial-btn');
-        const testimonialsList = document.getElementById('testimonials-list');
-
-        async function loadTestimonials() {
-            testimonialsList.innerHTML = '<p class="text-center text-gray-500">Loading testimonials...</p>';
+        // Logout Function
+        const logoutUser = async () => {
             try {
-                const testimonials = await getCollectionDocs('testimonials');
-                testimonialsList.innerHTML = '';
-                if (Object.keys(testimonials).length > 0) {
-                    Object.keys(testimonials).forEach(key => {
-                        const testimonial = testimonials[key];
-                        const testimonialItem = document.createElement('div');
-                        testimonialItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
-                        testimonialItem.innerHTML = `
-                            <div>
-                                <h4 class="font-semibold text-gray-900">${testimonial.name}</h4>
-                                <p class="text-sm text-gray-600 italic">"${testimonial.quote}"</p>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button data-id="${key}" class="edit-testimonial-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
-                                <button data-id="${key}" class="delete-testimonial-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
-                            </div>
-                        `;
-                        testimonialsList.appendChild(testimonialItem);
-                    });
-                    document.querySelectorAll('.edit-testimonial-btn').forEach(button => button.addEventListener('click', editTestimonial));
-                    document.querySelectorAll('.delete-testimonial-btn').forEach(button => button.addEventListener('click', deleteTestimonial));
-                } else {
-                    testimonialsList.innerHTML = '<p class="text-center text-gray-500">No testimonials found.</p>';
-                }
+                await signOut(auth);
+                console.log('User logged out successfully.');
+                alert('আপনি সফলভাবে লগআউট করেছেন।');
+                // onAuthStateChanged will handle displaying login form
             } catch (error) {
-                console.error("Error loading testimonials:", error);
-                testimonialsList.innerHTML = '<p class="text-center text-red-500">Failed to load testimonials.</p>';
+                console.error('Logout failed:', error.message);
+                alert('লগআউট ব্যর্থ হয়েছে: ' + error.message);
             }
+        };
+
+        if (logoutButton) {
+            logoutButton.addEventListener('click', logoutUser);
         }
 
-        saveTestimonialBtn.addEventListener('click', async () => {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to save testimonials.');
-                return;
-            }
-            const id = testimonialId.value;
-            const testimonialData = {
-                name: testimonialName.value,
-                quote: testimonialQuote.value
-            };
-
-            try {
-                if (id) {
-                    await setDocument('testimonials', id, testimonialData);
-                } else {
-                    await addDocument('testimonials', testimonialData);
-                }
-                alert('Testimonial saved successfully!');
-                clearForm([testimonialId, testimonialName, testimonialQuote]);
-                loadTestimonials();
-            } catch (error) {
-                console.error("Error saving testimonial:", error);
-                alert('Failed to save testimonial: ' + error.message);
-            }
-        });
-
-        clearTestimonialBtn.addEventListener('click', () => {
-            clearForm([testimonialId, testimonialName, testimonialQuote]);
-        });
-
-        async function editTestimonial(event) {
-            const id = event.target.dataset.id;
-            const testimonial = await getSingleDoc('testimonials', id);
-            if (testimonial) {
-                testimonialId.value = id;
-                testimonialName.value = testimonial.name || '';
-                testimonialQuote.value = testimonial.quote || '';
-                document.getElementById('testimonials-tab').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                alert("Testimonial not found for editing.");
-            }
-        }
-
-        async function deleteTestimonial(event) {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to delete testimonials.');
-                return;
-            }
-            const id = event.target.dataset.id;
-            if (confirm('Are you sure you want to delete this testimonial?')) {
-                try {
-                    await deleteDocument('testimonials', id);
-                    alert('Testimonial deleted successfully!');
-                    loadTestimonials();
-                } catch (error) {
-                    console.error("Error deleting testimonial:", error);
-                    alert('Failed to delete testimonial: ' + error.message);
-                }
-            }
-        }
-
-        // --- About Us Management ---
-        const aboutMission = document.getElementById('about-mission');
-        const aboutStory = document.getElementById('about-story');
-        const saveAboutTextBtn = document.getElementById('save-about-text-btn');
-
-        const teamMemberId = document.getElementById('team-member-id');
-        const teamMemberName = document.getElementById('team-member-name');
-        const teamMemberRole = document.getElementById('team-member-role');
-        const teamMemberImage = document.getElementById('team-member-image');
-        const saveTeamMemberBtn = document.getElementById('save-team-member-btn');
-        const clearTeamMemberBtn = document.getElementById('clear-team-member-btn');
-        const teamMembersList = document.getElementById('team-members-list');
-
-        async function loadAbout() {
-            try {
-                const aboutData = await getSingleDoc('about', 'companyInfo');
-                if (aboutData) {
-                    aboutMission.value = aboutData.mission || '';
-                    aboutStory.value = aboutData.story || '';
-                    renderTeamMembers(aboutData.team);
-                } else {
-                    aboutMission.value = '';
-                    aboutStory.value = '';
-                    renderTeamMembers([]); // Clear team if no data
-                    console.log("About Us document 'companyInfo' not found.");
-                }
-            } catch (error) {
-                console.error("Error loading About Us data:", error);
-                aboutMission.value = 'Failed to load.';
-                aboutStory.value = 'Failed to load.';
-                teamMembersList.innerHTML = '<p class="text-center text-red-500">Failed to load team members.</p>';
-            }
-        }
-
-        function renderTeamMembers(team) {
-            teamMembersList.innerHTML = '';
-            if (team && Array.isArray(team) && team.length > 0) {
-                team.forEach((member, index) => {
-                    const memberItem = document.createElement('div');
-                    memberItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
-                    memberItem.innerHTML = `
-                        <div>
-                            <h4 class="font-semibold text-gray-900">${member.name}</h4>
-                            <p class="text-sm text-gray-600">${member.role}</p>
+        // --- CRUD Operations for Tools ---
+        const fetchAndRenderTools = async () => {
+            console.log("Fetching tools...");
+            toolsList.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, "tools"));
+            querySnapshot.forEach((doc) => {
+                const tool = doc.data();
+                const toolId = doc.id;
+                const toolCard = `
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm flex flex-col">
+                        <img src="${tool.image}" alt="${tool.name}" class="w-full h-32 object-cover mb-4 rounded">
+                        <h4 class="text-lg font-semibold">${tool.name}</h4>
+                        <p class="text-gray-600 text-sm mb-2 flex-grow">${tool.description}</p>
+                        <a href="${tool.link}" target="_blank" class="text-blue-500 hover:underline text-sm mb-2">Visit Tool</a>
+                        <div class="mt-auto flex justify-end space-x-2">
+                            <button data-id="${toolId}" class="edit-tool-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
+                            <button data-id="${toolId}" class="delete-tool-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
                         </div>
-                        <div class="flex space-x-2">
-                            <button data-index="${index}" class="edit-team-member-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
-                            <button data-index="${index}" class="delete-team-member-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
-                        </div>
-                    `;
-                    teamMembersList.appendChild(memberItem);
-                });
-                document.querySelectorAll('.edit-team-member-btn').forEach(button => button.addEventListener('click', editTeamMember));
-                document.querySelectorAll('.delete-team-member-btn').forEach(button => button.addEventListener('click', deleteTeamMember));
-            } else {
-                teamMembersList.innerHTML = '<p class="text-center text-gray-500">No team members found.</p>';
-            }
-        }
+                    </div>
+                `;
+                toolsList.innerHTML += toolCard;
+            });
+            attachToolEventListeners();
+            console.log("Tools rendered.");
+        };
 
-        saveAboutTextBtn.addEventListener('click', async () => {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to save About Us text.');
-                return;
-            }
-            try {
-                // Fetch current team to merge, or initialize if not present
-                const currentAbout = await getSingleDoc('about', 'companyInfo') || {};
-                await setDocument('about', 'companyInfo', {
-                    mission: aboutMission.value,
-                    story: aboutStory.value,
-                    team: currentAbout.team || [] // Preserve existing team
-                });
-                alert('About text saved successfully!');
-            } catch (error) {
-                console.error("Error saving about text:", error);
-                alert('Failed to save about text: ' + error.message);
-            }
-        });
-
-        saveTeamMemberBtn.addEventListener('click', async () => {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to save team members.');
-                return;
-            }
-            try {
-                const currentAbout = await getSingleDoc('about', 'companyInfo') || {};
-                const team = currentAbout.team || [];
-                const newMember = {
-                    name: teamMemberName.value,
-                    role: teamMemberRole.value,
-                    image: teamMemberImage.value
+        const attachToolEventListeners = () => {
+            document.querySelectorAll('.delete-tool-btn').forEach(button => {
+                button.onclick = async (e) => {
+                    const toolId = e.target.dataset.id;
+                    if (confirm('Are you sure you want to delete this tool?')) {
+                        try {
+                            await deleteDoc(doc(db, "tools", toolId));
+                            alert('Tool deleted successfully!');
+                            console.log('Tool deleted:', toolId);
+                            fetchAndRenderTools();
+                        } catch (error) {
+                            console.error('Failed to delete tool:', error.message);
+                            alert('Failed to delete tool: ' + error.message);
+                        }
+                    }
                 };
+            });
 
-                const id = teamMemberId.value; // This will be the index for editing
-                if (id !== '') {
-                    team[parseInt(id)] = newMember;
-                } else {
-                    team.push(newMember);
-                }
-                await setDocument('about', 'companyInfo', { ...currentAbout, team });
-                alert('Team member saved successfully!');
-                clearForm([teamMemberId, teamMemberName, teamMemberRole, teamMemberImage]);
-                loadAbout(); // Reload all about data including team
-            } catch (error) {
-                console.error("Error saving team member:", error);
-                alert('Failed to save team member: ' + error.message);
-            }
-        });
+            document.querySelectorAll('.edit-tool-btn').forEach(button => {
+                button.onclick = async (e) => {
+                    const toolId = e.target.dataset.id;
+                    // In a real app, you'd populate a form with existing data for editing
+                    alert('Edit functionality for tool ' + toolId + ' is not yet implemented.');
+                    // Example: You might open a modal with a form pre-filled with tool data
+                };
+            });
+        };
 
-        clearTeamMemberBtn.addEventListener('click', () => {
-            clearForm([teamMemberId, teamMemberName, teamMemberRole, teamMemberImage]);
-        });
-
-        async function editTeamMember(event) {
-            const index = parseInt(event.target.dataset.index);
-            const aboutData = await getSingleDoc('about', 'companyInfo');
-            const member = aboutData.team[index];
-            if (member) {
-                teamMemberId.value = index;
-                teamMemberName.value = member.name || '';
-                teamMemberRole.value = member.role || '';
-                teamMemberImage.value = member.image || '';
-                document.getElementById('about-tab').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                alert("Team member not found for editing.");
-            }
-        }
-
-        async function deleteTeamMember(event) {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to delete team members.');
-                return;
-            }
-            const index = parseInt(event.target.dataset.index);
-            if (confirm('Are you sure you want to delete this team member?')) {
+        if (addToolForm) {
+            addToolForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const newTool = {
+                    name: addToolForm['tool-name'].value,
+                    description: addToolForm['tool-description'].value,
+                    image: addToolForm['tool-image'].value,
+                    link: addToolForm['tool-link'].value,
+                    timestamp: new Date() // Add a timestamp for ordering
+                };
                 try {
-                    const aboutData = await getSingleDoc('about', 'companyInfo');
-                    const team = aboutData.team || [];
-                    team.splice(index, 1);
-                    await setDocument('about', 'companyInfo', { ...aboutData, team });
-                    alert('Team member deleted successfully!');
-                    loadAbout();
+                    await addDoc(collection(db, "tools"), newTool);
+                    alert('Tool added successfully!');
+                    console.log('Tool added:', newTool.name);
+                    addToolForm.reset();
+                    fetchAndRenderTools();
                 } catch (error) {
-                    console.error("Error deleting team member:", error);
-                    alert('Failed to delete team member: ' + error.message);
+                    console.error('Failed to add tool:', error.message);
+                    alert('Failed to add tool: ' + error.message);
                 }
-            }
+            });
         }
 
-        // --- Contact Info Management ---
-        const contactEmail = document.getElementById('contact-email');
-        const contactPhone = document.getElementById('contact-phone');
-        const contactAddress = document.getElementById('contact-address');
-        const socialFacebook = document.getElementById('social-facebook');
-        const socialTwitter = document.getElementById('social-twitter');
-        const socialLinkedin = document.getElementById('social-linkedin');
-        const saveContactInfoBtn = document.getElementById('save-contact-info-btn');
+        // --- CRUD Operations for Features ---
+        const fetchAndRenderFeatures = async () => {
+            console.log("Fetching features...");
+            featuresList.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, "features"));
+            querySnapshot.forEach((doc) => {
+                const feature = doc.data();
+                const featureId = doc.id;
+                const featureCard = `
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm flex flex-col">
+                        <img src="${feature.image}" alt="${feature.name}" class="w-full h-32 object-cover mb-4 rounded">
+                        <h4 class="text-lg font-semibold">${feature.name}</h4>
+                        <p class="text-gray-600 text-sm mb-2 flex-grow">${feature.description}</p>
+                        <div class="mt-auto flex justify-end space-x-2">
+                            <button data-id="${featureId}" class="edit-feature-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
+                            <button data-id="${featureId}" class="delete-feature-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
+                        </div>
+                    </div>
+                `;
+                featuresList.innerHTML += featureCard;
+            });
+            attachFeatureEventListeners();
+            console.log("Features rendered.");
+        };
 
-        async function loadContactInfo() {
-            try {
-                const contactInfo = await getSingleDoc('contactInfo', 'main');
-                if (contactInfo) {
-                    contactEmail.value = contactInfo.email || '';
-                    contactPhone.value = contactInfo.phone || '';
-                    contactAddress.value = contactInfo.address || '';
-                    socialFacebook.value = contactInfo.socials?.facebook || '';
-                    socialTwitter.value = contactInfo.socials?.twitter || '';
-                    socialLinkedin.value = contactInfo.socials?.linkedin || '';
-                } else {
-                    clearForm([contactEmail, contactPhone, contactAddress, socialFacebook, socialTwitter, socialLinkedin]);
-                    console.log("Contact Info document 'main' not found.");
-                }
-            } catch (error) {
-                console.error("Error loading contact info:", error);
-                alert('Failed to load contact information.');
-            }
-        }
+        const attachFeatureEventListeners = () => {
+            document.querySelectorAll('.delete-feature-btn').forEach(button => {
+                button.onclick = async (e) => {
+                    const featureId = e.target.dataset.id;
+                    if (confirm('Are you sure you want to delete this feature?')) {
+                        try {
+                            await deleteDoc(doc(db, "features", featureId));
+                            alert('Feature deleted successfully!');
+                            console.log('Feature deleted:', featureId);
+                            fetchAndRenderFeatures();
+                        } catch (error) {
+                            console.error('Failed to delete feature:', error.message);
+                            alert('Failed to delete feature: ' + error.message);
+                        }
+                    }
+                };
+            });
 
-        saveContactInfoBtn.addEventListener('click', async () => {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to save contact information.');
-                return;
-            }
-            const contactData = {
-                email: contactEmail.value,
-                phone: contactPhone.value,
-                address: contactAddress.value,
-                socials: {
-                    facebook: socialFacebook.value,
-                    twitter: socialTwitter.value,
-                    linkedin: socialLinkedin.value
-                }
-            };
-            try {
-                await setDocument('contactInfo', 'main', contactData);
-                alert('Contact information saved successfully!');
-            } catch (error) {
-                console.error("Error saving contact info:", error);
-                alert('Failed to save contact information: ' + error.message);
-            }
-        });
+            document.querySelectorAll('.edit-feature-btn').forEach(button => {
+                button.onclick = async (e) => {
+                    const featureId = e.target.dataset.id;
+                    alert('Edit functionality for feature ' + featureId + ' is not yet implemented.');
+                };
+            });
+        };
 
-        // --- Contact Submissions ---
-        const contactSubmissionsList = document.getElementById('contact-submissions-list');
-
-        async function loadContactSubmissions() {
-            contactSubmissionsList.innerHTML = '<p class="text-center text-gray-500">Loading submissions...</p>';
-            try {
-                const q = query(collection(db, "contactSubmissions"), orderBy("timestamp", "desc"));
-                const querySnapshot = await getDocs(q);
-                contactSubmissionsList.innerHTML = '';
-                if (querySnapshot.empty) {
-                    contactSubmissionsList.innerHTML = '<p class="text-center text-gray-500">No contact form submissions yet.</p>';
-                    return;
-                }
-                querySnapshot.forEach(doc => {
-                    const submission = doc.data();
-                    const date = submission.timestamp ? new Date(submission.timestamp.toDate()).toLocaleString() : 'N/A';
-                    const submissionItem = document.createElement('div');
-                    submissionItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 mb-3';
-                    submissionItem.innerHTML = `
-                        <p><strong class="text-gray-900">Name:</strong> ${submission.name}</p>
-                        <p><strong class="text-gray-900">Email:</strong> ${submission.email}</p>
-                        <p><strong class="text-gray-900">Message:</strong> ${submission.message}</p>
-                        <p class="text-xs text-gray-500 mt-2">Submitted on: ${date}</p>
-                        <button data-id="${doc.id}" class="delete-submission-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 mt-2">Delete</button>
-                    `;
-                    contactSubmissionsList.appendChild(submissionItem);
-                });
-                document.querySelectorAll('.delete-submission-btn').forEach(button => button.addEventListener('click', deleteContactSubmission));
-            } catch (error) {
-                console.error("Error loading contact submissions:", error);
-                contactSubmissionsList.innerHTML = '<p class="text-center text-red-500">Failed to load submissions.</p>';
-            }
-        }
-
-        async function deleteContactSubmission(event) {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to delete submissions.');
-                return;
-            }
-            const id = event.target.dataset.id;
-            if (confirm('Are you sure you want to delete this submission?')) {
+        if (addFeatureForm) {
+            addFeatureForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const newFeature = {
+                    name: addFeatureForm['feature-name'].value,
+                    description: addFeatureForm['feature-description'].value,
+                    image: addFeatureForm['feature-image'].value,
+                    timestamp: new Date()
+                };
                 try {
-                    await deleteDocument('contactSubmissions', id);
-                    alert('Submission deleted successfully!');
-                    loadContactSubmissions();
+                    await addDoc(collection(db, "features"), newFeature);
+                    alert('Feature added successfully!');
+                    console.log('Feature added:', newFeature.name);
+                    addFeatureForm.reset();
+                    fetchAndRenderFeatures();
                 } catch (error) {
-                    console.error("Error deleting submission:", error);
-                    alert('Failed to delete submission: ' + error.message);
+                    console.error('Failed to add feature:', error.message);
+                    alert('Failed to add feature: ' + error.message);
                 }
-            }
+            });
         }
 
-        // --- Newsletter Subscriptions ---
-        const newsletterSubscriptionsList = document.getElementById('newsletter-subscriptions-list');
+        // --- CRUD Operations for FAQs ---
+        const fetchAndRenderFAQs = async () => {
+            console.log("Fetching FAQs...");
+            faqsList.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, "faqs"));
+            querySnapshot.forEach((doc) => {
+                const faq = doc.data();
+                const faqId = doc.id;
+                const faqCard = `
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                        <h4 class="text-lg font-semibold">${faq.question}</h4>
+                        <p class="text-gray-600 text-sm mb-2">${faq.answer}</p>
+                        <div class="flex justify-end space-x-2">
+                            <button data-id="${faqId}" class="edit-faq-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
+                            <button data-id="${faqId}" class="delete-faq-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
+                        </div>
+                    </div>
+                `;
+                faqsList.innerHTML += faqCard;
+            });
+            attachFaqEventListeners();
+            console.log("FAQs rendered.");
+        };
 
-        async function loadNewsletterSubscriptions() {
-            newsletterSubscriptionsList.innerHTML = '<p class="text-center text-gray-500">Loading subscriptions...</p>';
-            try {
-                const q = query(collection(db, "newsletterSubscriptions"), orderBy("timestamp", "desc"));
-                const querySnapshot = await getDocs(q);
-                newsletterSubscriptionsList.innerHTML = '';
-                if (querySnapshot.empty) {
-                    newsletterSubscriptionsList.innerHTML = '<p class="text-center text-gray-500">No newsletter subscriptions yet.</p>';
-                    return;
-                }
-                querySnapshot.forEach(doc => {
-                    const subscription = doc.data();
-                    const date = subscription.timestamp ? new Date(subscription.timestamp.toDate()).toLocaleString() : 'N/A';
-                    const subscriptionItem = document.createElement('div');
-                    subscriptionItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 mb-3';
-                    subscriptionItem.innerHTML = `
-                        <p><strong class="text-gray-900">Email:</strong> ${subscription.email}</p>
-                        <p class="text-xs text-gray-500 mt-2">Subscribed on: ${date}</p>
-                        <button data-id="${doc.id}" class="delete-newsletter-sub-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 mt-2">Delete</button>
-                    `;
-                    newsletterSubscriptionsList.appendChild(subscriptionItem);
-                });
-                document.querySelectorAll('.delete-newsletter-sub-btn').forEach(button => button.addEventListener('click', deleteNewsletterSubscription));
-            } catch (error) {
-                console.error("Error loading newsletter subscriptions:", error);
-                newsletterSubscriptionsList.innerHTML = '<p class="text-center text-red-500">Failed to load subscriptions.</p>';
-            }
-        }
+        const attachFaqEventListeners = () => {
+            document.querySelectorAll('.delete-faq-btn').forEach(button => {
+                button.onclick = async (e) => {
+                    const faqId = e.target.dataset.id;
+                    if (confirm('Are you sure you want to delete this FAQ?')) {
+                        try {
+                            await deleteDoc(doc(db, "faqs", faqId));
+                            alert('FAQ deleted successfully!');
+                            console.log('FAQ deleted:', faqId);
+                            fetchAndRenderFAQs();
+                        } catch (error) {
+                            console.error('Failed to delete FAQ:', error.message);
+                            alert('Failed to delete FAQ: ' + error.message);
+                        }
+                    }
+                };
+            });
 
-        async function deleteNewsletterSubscription(event) {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to delete subscriptions.');
-                return;
-            }
-            const id = event.target.dataset.id;
-            if (confirm('Are you sure you want to delete this subscription?')) {
-                try {
-                    await deleteDocument('newsletterSubscriptions', id);
-                    alert('Subscription deleted successfully!');
-                    loadNewsletterSubscriptions();
-                } catch (error) {
-                    console.error("Error deleting subscription:", error);
-                    alert('Failed to delete subscription: ' + error.message);
-                }
-            }
-        }
-
-
-        // --- Announcement Management ---
-        const announcementActive = document.getElementById('announcement-active');
-        const announcementMessage = document.getElementById('announcement-message');
-        const saveAnnouncementBtn = document.getElementById('save-announcement-btn');
-
-        async function loadAnnouncement() {
-            try {
-                const announcement = await getSingleDoc('announcement', 'current');
-                if (announcement) {
-                    announcementActive.checked = announcement.active || false;
-                    announcementMessage.value = announcement.message || '';
-                } else {
-                    announcementActive.checked = false;
-                    announcementMessage.value = '';
-                    console.log("Announcement document 'current' not found.");
-                }
-            } catch (error) {
-                console.error("Error loading announcement:", error);
-                alert('Failed to load announcement.');
-            }
-        }
-
-        saveAnnouncementBtn.addEventListener('click', async () => {
-            if (!currentUserIsSuperAdmin && !currentUserIsSubAdmin) {
-                alert('You do not have permission to save announcements.');
-                return;
-            }
-            const announcementData = {
-                active: announcementActive.checked,
-                message: announcementMessage.value
-            };
-            try {
-                await setDocument('announcement', 'current', announcementData);
-                alert('Announcement saved successfully!');
-            } catch (error) {
-                console.error("Error saving announcement:", error);
-                alert('Failed to save announcement: ' + error.message);
-            }
-        });
-
-        // --- Admin Users Management (Super Admin only) ---
-        const newAdminUid = document.getElementById('new-admin-uid');
-        const newAdminEmail = document.getElementById('new-admin-email');
-        const isSuperAdminCheckbox = document.getElementById('is-super-admin');
-        const isSubAdminCheckbox = document.getElementById('is-sub-admin');
-        const addAdminBtn = document.getElementById('add-admin-btn');
-        const clearAdminFormBtn = document.getElementById('clear-admin-form-btn');
-        const adminUsersList = document.getElementById('admin-users-list');
-
-        async function loadAdminUsers() {
-            adminUsersMessage.classList.add('hidden'); // Hide previous messages
-            if (!currentUserIsSuperAdmin) {
-                adminUsersMessage.textContent = 'Only Super Admins can manage admin users.';
-                adminUsersMessage.classList.remove('hidden');
-                adminUsersList.innerHTML = '';
-                newAdminUid.disabled = true;
-                newAdminEmail.disabled = true;
-                isSuperAdminCheckbox.disabled = true;
-                isSubAdminCheckbox.disabled = true;
-                addAdminBtn.disabled = true;
-                clearAdminFormBtn.disabled = true;
-                return;
-            } else {
-                newAdminUid.disabled = false;
-                newAdminEmail.disabled = false;
-                isSuperAdminCheckbox.disabled = false;
-                isSubAdminCheckbox.disabled = false;
-                addAdminBtn.disabled = false;
-                clearAdminFormBtn.disabled = false;
-            }
-
-            adminUsersList.innerHTML = '<p class="text-center text-gray-500">Loading admin users...</p>';
-            try {
-                const adminUsers = await getCollectionDocs('adminUsers');
-                adminUsersList.innerHTML = '';
-                if (Object.keys(adminUsers).length > 0) {
-                    Object.keys(adminUsers).forEach(uid => {
-                        const admin = adminUsers[uid];
-                        const adminItem = document.createElement('div');
-                        adminItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm flex justify-between items-center border border-gray-200';
-                        adminItem.innerHTML = `
-                            <div>
-                                <h4 class="font-semibold text-gray-900">${admin.email} <span class="text-sm text-gray-600">(${uid})</span></h4>
-                                <p class="text-sm text-gray-600">
-                                    ${admin.isSuperAdmin ? '<span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">Super Admin</span>' : ''}
-                                    ${admin.isSubAdmin ? '<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Sub Admin</span>' : ''}
-                                    ${!admin.isSuperAdmin && !admin.isSubAdmin ? '<span class="text-red-500 text-xs">No Admin Role</span>' : ''}
-                                </p>
-                            </div>
-                            <div class="flex space-x-2">
-                                ${uid !== auth.currentUser.uid ? `<button data-uid="${uid}" class="delete-admin-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>` : '<span class="text-gray-500 text-xs">Cannot delete self</span>'}
-                            </div>
-                        `;
-                        adminUsersList.appendChild(adminItem);
-                    });
-                    document.querySelectorAll('.delete-admin-btn').forEach(button => button.addEventListener('click', deleteAdminUser));
-                } else {
-                    adminUsersList.innerHTML = '<p class="text-center text-gray-500">No admin users found.</p>';
-                }
-            } catch (error) {
-                console.error("Error loading admin users:", error);
-                adminUsersList.innerHTML = '<p class="text-center text-red-500">Failed to load admin users.</p>';
-            }
-        }
-
-        addAdminBtn.addEventListener('click', async () => {
-            if (!currentUserIsSuperAdmin) {
-                alert('You do not have permission to add/edit admin users.');
-                return;
-            }
-            const uid = newAdminUid.value;
-            const email = newAdminEmail.value;
-            const isSuper = isSuperAdminCheckbox.checked;
-            const isSub = isSubAdminCheckbox.checked;
-
-            if (!uid || !email) {
-                alert('Please enter UID and Email for the new admin.');
-                return;
-            }
-
-            try {
-                await setDocument('adminUsers', uid, {
-                    email: email,
-                    isSuperAdmin: isSuper,
-                    isSubAdmin: isSub
-                });
-                alert('Admin user saved successfully!');
-                clearForm([newAdminUid, newAdminEmail, isSuperAdminCheckbox, isSubAdminCheckbox]);
-                loadAdminUsers();
-            } catch (error) {
-                console.error("Error saving admin user:", error);
-                alert('Failed to save admin user: ' + error.message);
-            }
-        });
-
-        clearAdminFormBtn.addEventListener('click', () => {
-            clearForm([newAdminUid, newAdminEmail, isSuperAdminCheckbox, isSubAdminCheckbox]);
-        });
-
-        async function deleteAdminUser(event) {
-            if (!currentUserIsSuperAdmin) {
-                alert('You do not have permission to delete admin users.');
-                return;
-            }
-            const uidToDelete = event.target.dataset.uid;
-            if (uidToDelete === auth.currentUser.uid) {
-                alert("You cannot delete your own admin account from here.");
-                return;
-            }
-            if (confirm(`Are you sure you want to delete admin user with UID: ${uidToDelete}?`)) {
-                try {
-                    await deleteDocument('adminUsers', uidToDelete);
-                    alert('Admin user deleted successfully!');
-                    loadAdminUsers();
-                } catch (error) {
-                    console.error("Error deleting admin user:", error);
-                    alert('Failed to delete admin user: ' + error.message);
-                }
-            }
-        }
-
+            document.querySelectorAll('.edit-faq-btn').forEach(button => {
+                button.onclick = async (e) => {
+                    const faqId = e.target.dataset.id;
+                    alert('Edit functionality for FAQ ' + faqId + ' is not yet implemented.');
+                };
+            });
+        };
     </script>
 </body>
-    </html>
+</html>
