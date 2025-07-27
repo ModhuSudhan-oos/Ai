@@ -1,0 +1,46 @@
+/* Custom styles if necessary, otherwise Tailwind handles most of it */
+
+/* Basic body styling */
+body {
+    font-family: 'Inter', sans-serif; /* Example font */
+    color: #333;
+    overflow-x: hidden; /* Prevent horizontal scroll from animations */
+}
+
+/* Scroll animations */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.fade-in-up {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Sticky header with hide-on-scroll effect */
+header {
+    transition: transform 0.3s ease-in-out;
+    position: sticky;
+    top: 0;
+    z-index: 50; /* Tailwind z-index-50 */
+}
+
+/* Aspect ratio for iframe (Tailwind's aspect-w-16 aspect-h-9 does this) */
+.aspect-w-16 {
+  position: relative;
+  width: 100%;
+}
+.aspect-w-16::before {
+  content: '';
+  display: block;
+  padding-top: calc(100% / (16 / 9)); /* 16:9 aspect ratio */
+}
+.aspect-h-9 iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
