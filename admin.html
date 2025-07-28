@@ -3,13 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Universal Admin Panel</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="admin.css">
+    
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Basic styling for tabs */
+        .tab-button.active {
+            @apply bg-blue-600 text-white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Card styling for lists */
+        .data-card {
+            @apply bg-gray-50 p-4 rounded-lg shadow-sm flex flex-col mb-4;
+        }
+        .data-card img {
+            @apply w-full h-32 object-cover mb-4 rounded;
+        }
+        .data-card h4 {
+            @apply text-lg font-semibold;
+        }
+        .data-card p {
+            @apply text-gray-600 text-sm mb-2 flex-grow;
+        }
+        .data-card .actions {
+            @apply mt-auto flex justify-end space-x-2;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
+    
     <section id="login-section" class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 class="text-2xl font-bold mb-6 text-center">Admin Login</h2>
         <form id="login-form">
@@ -29,81 +62,170 @@
         </form>
     </section>
 
-    <section id="admin-content" class="hidden bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
-        <h2 class="text-2xl font-bold mb-6 text-center">Admin Dashboard</h2>
-        <button id="logout-button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4">Logout</button>
+    
+    <section id="admin-content" class="hidden bg-white p-8 rounded-lg shadow-md w-full max-w-6xl">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold">Admin Dashboard</h2>
+            <button id="logout-button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</button>
+        </div>
 
-        <h3 class="text-xl font-semibold mb-4">Add New Tool</h3>
-        <form id="add-tool-form" class="mb-8">
-            <div class="mb-4">
-                <label for="tool-name" class="block text-gray-700 text-sm font-bold mb-2">Tool Name:</label>
-                <input type="text" id="tool-name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div class="mb-4">
-                <label for="tool-description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-                <textarea id="tool-description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="tool-image" class="block text-gray-700 text-sm font-bold mb-2">Image URL:</label>
-                <input type="url" id="tool-image" name="image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div class="mb-4">
-                <label for="tool-link" class="block text-gray-700 text-sm font-bold mb-2">Link:</label>
-                <input type="url" id="tool-link" name="link" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add Tool</button>
-        </form>
+        
+        <div class="mb-6 border-b border-gray-200">
+            <nav class="flex flex-wrap -mb-px text-sm font-medium text-center" id="admin-tabs">
+                <button class="tab-button py-2 px-4 block hover:text-blue-700 focus:outline-none active" data-tab="tools">Tools</button>
+                <button class="tab-button py-2 px-4 block hover:text-blue-700 focus:outline-none" data-tab="features">Features</button>
+                <button class="tab-button py-2 px-4 block hover:text-blue-700 focus:outline-none" data-tab="faqs">FAQs</button>
+                <button class="tab-button py-2 px-4 block hover:text-blue-700 focus:outline-none" data-tab="testimonials">Testimonials</button>
+                <button class="tab-button py-2 px-4 block hover:text-blue-700 focus:outline-none" data-tab="about">About</button>
+                <button class="tab-button py-2 px-4 block hover:text-blue-700 focus:outline-none" data-tab="contactInfo">Contact Info</button>
+                <button class="tab-button py-2 px-4 block hover:text-blue-700 focus:outline-none" data-tab="contactSubmissions">Contact Submissions</button>
+                <button class="tab-button py-2 px-4 block hover:text-blue-700 focus:outline-none" data-tab="newsletterSubscriptions">Newsletter Subscriptions</button>
+                <button class="tab-button py-2 px-4 block hover:text-blue-700 focus:outline-none" data-tab="announcement">Announcement</button>
+            </nav>
+        </div>
 
-        <h3 class="text-xl font-semibold mb-4">Existing Tools</h3>
-        <div id="tools-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            </div>
-
-        <h3 class="text-xl font-semibold mt-8 mb-4">Add New Feature</h3>
-        <form id="add-feature-form" class="mb-8">
-            <div class="mb-4">
-                <label for="feature-name" class="block text-gray-700 text-sm font-bold mb-2">Feature Name:</label>
-                <input type="text" id="feature-name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div class="mb-4">
-                <label for="feature-description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-                <textarea id="feature-description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="feature-image" class="block text-gray-700 text-sm font-bold mb-2">Image URL:</label>
-                <input type="url" id="feature-image" name="image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add Feature</button>
-        </form>
-
-        <h3 class="text-xl font-semibold mb-4">Existing Features</h3>
-        <div id="features-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <div id="tab-content-container">
+            
+            <div id="tools-tab" class="tab-content active">
+                <h3 class="text-xl font-semibold mb-4">Manage Tools</h3>
+                <form id="add-tool-form" class="mb-8 p-4 border rounded-lg bg-gray-50">
+                    <h4 class="text-lg font-bold mb-2">Add New Tool</h4>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Name:</label><input type="text" name="name" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Description:</label><textarea name="description" class="shadow appearance-none border rounded w-full py-2 px-3" rows="2" required></textarea></div>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Image URL:</label><input type="url" name="image" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-1">Link:</label><input type="url" name="link" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add Tool</button>
+                </form>
+                <h4 class="text-lg font-semibold mb-4">Existing Tools</h4>
+                <div id="tools-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
 
-        <h3 class="text-xl font-semibold mt-8 mb-4">Add New FAQ</h3>
-        <form id="add-faq-form" class="mb-8">
-            <div class="mb-4">
-                <label for="faq-question" class="block text-gray-700 text-sm font-bold mb-2">Question:</label>
-                <input type="text" id="faq-question" name="question" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            
+            <div id="features-tab" class="tab-content">
+                <h3 class="text-xl font-semibold mb-4">Manage Features</h3>
+                <form id="add-feature-form" class="mb-8 p-4 border rounded-lg bg-gray-50">
+                    <h4 class="text-lg font-bold mb-2">Add New Feature</h4>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Name:</label><input type="text" name="name" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Description:</label><textarea name="description" class="shadow appearance-none border rounded w-full py-2 px-3" rows="2" required></textarea></div>
+                    <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-1">Image URL:</label><input type="url" name="image" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add Feature</button>
+                </form>
+                <h4 class="text-lg font-semibold mb-4">Existing Features</h4>
+                <div id="features-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
-            <div class="mb-4">
-                <label for="faq-answer" class="block text-gray-700 text-sm font-bold mb-2">Answer:</label>
-                <textarea id="faq-answer" name="answer" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add FAQ</button>
-        </form>
 
-        <h3 class="text-xl font-semibold mb-4">Existing FAQs</h3>
-        <div id="faqs-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            
+            <div id="faqs-tab" class="tab-content">
+                <h3 class="text-xl font-semibold mb-4">Manage FAQs</h3>
+                <form id="add-faq-form" class="mb-8 p-4 border rounded-lg bg-gray-50">
+                    <h4 class="text-lg font-bold mb-2">Add New FAQ</h4>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Question:</label><input type="text" name="question" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-1">Answer:</label><textarea name="answer" class="shadow appearance-none border rounded w-full py-2 px-3" rows="3" required></textarea></div>
+                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add FAQ</button>
+                </form>
+                <h4 class="text-lg font-semibold mb-4">Existing FAQs</h4>
+                <div id="faqs-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
+
+            
+            <div id="testimonials-tab" class="tab-content">
+                <h3 class="text-xl font-semibold mb-4">Manage Testimonials</h3>
+                <form id="add-testimonial-form" class="mb-8 p-4 border rounded-lg bg-gray-50">
+                    <h4 class="text-lg font-bold mb-2">Add New Testimonial</h4>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Author Name:</label><input type="text" name="author" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Author Title/Company:</label><input type="text" name="title" class="shadow appearance-none border rounded w-full py-2 px-3"></div>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Quote:</label><textarea name="quote" class="shadow appearance-none border rounded w-full py-2 px-3" rows="3" required></textarea></div>
+                    <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-1">Image URL (Optional):</label><input type="url" name="image" class="shadow appearance-none border rounded w-full py-2 px-3"></div>
+                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add Testimonial</button>
+                </form>
+                <h4 class="text-lg font-semibold mb-4">Existing Testimonials</h4>
+                <div id="testimonials-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            
+            <div id="about-tab" class="tab-content">
+                <h3 class="text-xl font-semibold mb-4">Manage About Section</h3>
+                <form id="update-about-form" class="mb-8 p-4 border rounded-lg bg-gray-50">
+                    <h4 class="text-lg font-bold mb-2">Update About Information</h4>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Main Heading:</label><input type="text" name="heading" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Description:</label><textarea name="description" class="shadow appearance-none border rounded w-full py-2 px-3" rows="5" required></textarea></div>
+                    <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-1">Image URL:</label><input type="url" name="image" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update About</button>
+                </form>
+                <div id="about-preview" class="data-card">
+                    <h4 class="text-xl font-bold mb-2">Current About Content</h4>
+                    <img id="about-image-preview" src="" alt="About Image" class="w-full h-48 object-cover mb-4 rounded">
+                    <h5 class="text-lg font-semibold" id="about-heading-preview"></h5>
+                    <p class="text-gray-700" id="about-description-preview"></p>
+                </div>
+            </div>
+
+            
+            <div id="contactInfo-tab" class="tab-content">
+                <h3 class="text-xl font-semibold mb-4">Manage Contact Information</h3>
+                <form id="update-contact-info-form" class="mb-8 p-4 border rounded-lg bg-gray-50">
+                    <h4 class="text-lg font-bold mb-2">Update Contact Details</h4>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Email:</label><input type="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Phone:</label><input type="tel" name="phone" class="shadow appearance-none border rounded w-full py-2 px-3" required></div>
+                    <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-1">Address:</label><textarea name="address" class="shadow appearance-none border rounded w-full py-2 px-3" rows="2" required></textarea></div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update Contact Info</button>
+                </form>
+                <div id="contact-info-preview" class="data-card">
+                    <h4 class="text-xl font-bold mb-2">Current Contact Info</h4>
+                    <p><strong>Email:</strong> <span id="contact-email-preview"></span></p>
+                    <p><strong>Phone:</strong> <span id="contact-phone-preview"></span></p>
+                    <p><strong>Address:</strong> <span id="contact-address-preview"></span></p>
+                </div>
+            </div>
+
+            
+            <div id="contactSubmissions-tab" class="tab-content">
+                <h3 class="text-xl font-semibold mb-4">Contact Form Submissions</h3>
+                <div id="contact-submissions-list" class="grid grid-cols-1 gap-4">
+                    <p class="text-gray-500">No submissions yet.</p>
+                </div>
+            </div>
+
+            
+            <div id="newsletterSubscriptions-tab" class="tab-content">
+                <h3 class="text-xl font-semibold mb-4">Newsletter Subscriptions</h3>
+                <div id="newsletter-subscriptions-list" class="grid grid-cols-1 gap-4">
+                    <p class="text-gray-500">No subscriptions yet.</p>
+                </div>
+            </div>
+
+            
+            <div id="announcement-tab" class="tab-content">
+                <h3 class="text-xl font-semibold mb-4">Manage Site Announcement</h3>
+                <form id="update-announcement-form" class="mb-8 p-4 border rounded-lg bg-gray-50">
+                    <h4 class="text-lg font-bold mb-2">Update Announcement</h4>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Title:</label><input type="text" name="title" class="shadow appearance-none border rounded w-full py-2 px-3"></div>
+                    <div class="mb-2"><label class="block text-gray-700 text-sm font-bold mb-1">Message:</label><textarea name="message" class="shadow appearance-none border rounded w-full py-2 px-3" rows="3"></textarea></div>
+                    <div class="mb-4 flex items-center">
+                        <input type="checkbox" id="announcement-active" name="active" class="mr-2 leading-tight">
+                        <label for="announcement-active" class="text-sm">Active (Show on website)</label>
+                    </div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update Announcement</button>
+                    <button type="button" id="clear-announcement-btn" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2">Clear Announcement</button>
+                </form>
+                <div id="announcement-preview" class="data-card">
+                    <h4 class="text-xl font-bold mb-2">Current Announcement</h4>
+                    <p><strong>Title:</strong> <span id="announcement-title-preview"></span></p>
+                    <p><strong>Message:</strong> <span id="announcement-message-preview"></span></p>
+                    <p><strong>Active:</strong> <span id="announcement-active-preview"></span></p>
+                </div>
+            </div>
+        </div>
     </section>
 
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBVpddOtX1yRxslNxh8yz3SJq53eUYhkZ0",
   authDomain: "next-gen-186aa.firebaseapp.com",
@@ -119,20 +241,59 @@ const firebaseConfig = {
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Admin UIDs - Replace with your actual UIDs
+        // Admin UIDs - Replace with your actual UIDs from Firebase Authentication
         const superAdminUID = "PjtAITuXjLYN6A1NX4pzy9KEZwJ3"; // e.g., "someSuperAdminUID123"
         const subAdminUID = "vuY4TfTHdyRmltDUWCQerWGEyEG3";   // e.g., "someSubAdminUID456"
 
+        // DOM Elements
         const loginSection = document.getElementById('login-section');
         const adminContent = document.getElementById('admin-content');
         const loginForm = document.getElementById('login-form');
         const logoutButton = document.getElementById('logout-button');
-        const addToolForm = document.getElementById('add-tool-form');
+        const adminTabs = document.getElementById('admin-tabs');
+        const tabContentContainer = document.getElementById('tab-content-container');
+
+        // References to lists and forms for different sections
         const toolsList = document.getElementById('tools-list');
-        const addFeatureForm = document.getElementById('add-feature-form');
+        const addToolForm = document.getElementById('add-tool-form');
+
         const featuresList = document.getElementById('features-list');
-        const addFaqForm = document.getElementById('add-faq-form');
+        const addFeatureForm = document.getElementById('add-feature-form');
+
         const faqsList = document.getElementById('faqs-list');
+        const addFaqForm = document.getElementById('add-faq-form');
+
+        const testimonialsList = document.getElementById('testimonials-list');
+        const addTestimonialForm = document.getElementById('add-testimonial-form');
+
+        const updateAboutForm = document.getElementById('update-about-form');
+        const aboutPreview = document.getElementById('about-preview');
+
+        const updateContactInfoForm = document.getElementById('update-contact-info-form');
+        const contactInfoPreview = document.getElementById('contact-info-preview');
+
+        const contactSubmissionsList = document.getElementById('contact-submissions-list');
+        const newsletterSubscriptionsList = document.getElementById('newsletter-subscriptions-list');
+
+        const updateAnnouncementForm = document.getElementById('update-announcement-form');
+        const announcementPreview = document.getElementById('announcement-preview');
+        const clearAnnouncementBtn = document.getElementById('clear-announcement-btn');
+
+
+        // --- Helper Functions ---
+
+        // Function to show active tab content
+        const showTab = (tabId) => {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabId + '-tab').classList.add('active');
+
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+        };
 
         // Function to check admin status and display content
         const checkAdminStatus = (user) => {
@@ -141,15 +302,93 @@ const firebaseConfig = {
                 console.log("User is an admin. Displaying admin content.");
                 loginSection.style.display = 'none';
                 adminContent.style.display = 'block';
-                fetchAndRenderTools();
-                fetchAndRenderFeatures();
-                fetchAndRenderFAQs();
+                // Load initial data for the first active tab (Tools)
+                showTab('tools'); // Show tools tab by default
+                fetchAndRenderAllData(); // Fetch data for all sections
             } else {
                 console.log("User is NOT an admin or not logged in. Displaying login section.");
                 alert("আপনার অ্যাডমিন প্যানেলে প্রবেশের অনুমতি নেই।");
                 logoutUser(); // If someone tries to access admin panel without admin UID, log them out
             }
         };
+
+        // Fetch and Render All Data for Admin Panel
+        const fetchAndRenderAllData = () => {
+            fetchAndRenderTools();
+            fetchAndRenderFeatures();
+            fetchAndRenderFAQs();
+            fetchAndRenderTestimonials();
+            fetchAndRenderAbout();
+            fetchAndRenderContactInfo();
+            fetchAndRenderContactSubmissions();
+            fetchAndRenderNewsletterSubscriptions();
+            fetchAndRenderAnnouncement();
+        };
+
+        // Generic render item function for repeated list structures
+        const renderItem = (doc, collectionName, containerId, fields, hasImage = false, hasLink = false) => {
+            const data = doc.data();
+            const itemId = doc.id;
+            let itemHtml = `<div class="data-card" data-id="${itemId}">`;
+            if (hasImage && data.image) {
+                itemHtml += `<img src="${data.image}" alt="${data[fields[0]] || 'Image'}" class="w-full h-32 object-cover mb-4 rounded">`;
+            }
+            fields.forEach(field => {
+                if (data[field]) {
+                    itemHtml += `<h4 class="text-lg font-semibold">${field.charAt(0).toUpperCase() + field.slice(1)}: ${data[field]}</h4>`;
+                }
+            });
+            if (hasLink && data.link) {
+                itemHtml += `<a href="${data.link}" target="_blank" class="text-blue-500 hover:underline text-sm mb-2">Visit Link</a>`;
+            }
+            itemHtml += `
+                <div class="actions">
+                    <button data-id="${itemId}" data-collection="${collectionName}" class="edit-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
+                    <button data-id="${itemId}" data-collection="${collectionName}" class="delete-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
+                </div>
+            </div>`;
+            document.getElementById(containerId).innerHTML += itemHtml;
+        };
+
+        // Attach generic event listeners for delete/edit
+        const attachEventListeners = (containerId, collectionName, fetchFunction) => {
+            document.getElementById(containerId).querySelectorAll('.delete-btn').forEach(button => {
+                button.onclick = async (e) => {
+                    const itemId = e.target.dataset.id;
+                    if (confirm(`Are you sure you want to delete this ${collectionName.slice(0, -1)}?`)) {
+                        try {
+                            await deleteDoc(doc(db, collectionName, itemId));
+                            alert(`${collectionName.slice(0, -1)} deleted successfully!`);
+                            console.log(`${collectionName.slice(0, -1)} deleted:`, itemId);
+                            fetchFunction(); // Re-fetch and render after delete
+                        } catch (error) {
+                            console.error(`Failed to delete ${collectionName.slice(0, -1)}:`, error.message);
+                            alert(`Failed to delete ${collectionName.slice(0, -1)}: ` + error.message);
+                        }
+                    }
+                };
+            });
+
+            document.getElementById(containerId).querySelectorAll('.edit-btn').forEach(button => {
+                button.onclick = async (e) => {
+                    const itemId = e.target.dataset.id;
+                    const itemCollection = e.target.dataset.collection;
+                    // For a real app, implement a modal or form population for editing.
+                    // For now, it's just an alert.
+                    alert(`Edit functionality for ${itemCollection.slice(0, -1)} ID: ${itemId} is not yet fully implemented. You'd typically load data into a form here.`);
+                    // Example:
+                    // const docRef = doc(db, itemCollection, itemId);
+                    // const docSnap = await getDoc(docRef);
+                    // if (docSnap.exists()) {
+                    //    const dataToEdit = docSnap.data();
+                    //    // Populate a form with dataToEdit
+                    // }
+                };
+            });
+        };
+
+
+        // --- Authentication ---
 
         // Auth state change listener
         onAuthStateChanged(auth, (user) => {
@@ -200,75 +439,58 @@ const firebaseConfig = {
             logoutButton.addEventListener('click', logoutUser);
         }
 
-        // --- CRUD Operations for Tools ---
+        // --- Tab Navigation ---
+        if (adminTabs) {
+            adminTabs.addEventListener('click', (e) => {
+                if (e.target.classList.contains('tab-button')) {
+                    const tabId = e.target.dataset.tab;
+                    showTab(tabId);
+                }
+            });
+        }
+
+        // --- CRUD Operations for Each Section ---
+
+        // Tools
         const fetchAndRenderTools = async () => {
             console.log("Fetching tools...");
             toolsList.innerHTML = '';
             const querySnapshot = await getDocs(collection(db, "tools"));
+            if (querySnapshot.empty) {
+                toolsList.innerHTML = '<p class="text-gray-500">No tools found.</p>';
+            }
             querySnapshot.forEach((doc) => {
                 const tool = doc.data();
-                const toolId = doc.id;
                 const toolCard = `
-                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm flex flex-col">
-                        <img src="${tool.image}" alt="${tool.name}" class="w-full h-32 object-cover mb-4 rounded">
-                        <h4 class="text-lg font-semibold">${tool.name}</h4>
-                        <p class="text-gray-600 text-sm mb-2 flex-grow">${tool.description}</p>
-                        <a href="${tool.link}" target="_blank" class="text-blue-500 hover:underline text-sm mb-2">Visit Tool</a>
-                        <div class="mt-auto flex justify-end space-x-2">
-                            <button data-id="${toolId}" class="edit-tool-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
-                            <button data-id="${toolId}" class="delete-tool-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
+                    <div class="data-card" data-id="${doc.id}">
+                        <img src="${tool.image}" alt="${tool.name}">
+                        <h4>${tool.name}</h4>
+                        <p>${tool.description}</p>
+                        <a href="${tool.link}" target="_blank" class="text-blue-500 hover:underline">Visit Tool</a>
+                        <div class="actions">
+                            <button data-id="${doc.id}" data-collection="tools" class="edit-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
+                            <button data-id="${doc.id}" data-collection="tools" class="delete-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
                         </div>
                     </div>
                 `;
                 toolsList.innerHTML += toolCard;
             });
-            attachToolEventListeners();
-            console.log("Tools rendered.");
+            attachEventListeners('tools-list', 'tools', fetchAndRenderTools);
         };
-
-        const attachToolEventListeners = () => {
-            document.querySelectorAll('.delete-tool-btn').forEach(button => {
-                button.onclick = async (e) => {
-                    const toolId = e.target.dataset.id;
-                    if (confirm('Are you sure you want to delete this tool?')) {
-                        try {
-                            await deleteDoc(doc(db, "tools", toolId));
-                            alert('Tool deleted successfully!');
-                            console.log('Tool deleted:', toolId);
-                            fetchAndRenderTools();
-                        } catch (error) {
-                            console.error('Failed to delete tool:', error.message);
-                            alert('Failed to delete tool: ' + error.message);
-                        }
-                    }
-                };
-            });
-
-            document.querySelectorAll('.edit-tool-btn').forEach(button => {
-                button.onclick = async (e) => {
-                    const toolId = e.target.dataset.id;
-                    // In a real app, you'd populate a form with existing data for editing
-                    alert('Edit functionality for tool ' + toolId + ' is not yet implemented.');
-                    // Example: You might open a modal with a form pre-filled with tool data
-                };
-            });
-        };
-
         if (addToolForm) {
             addToolForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const newTool = {
-                    name: addToolForm['tool-name'].value,
-                    description: addToolForm['tool-description'].value,
-                    image: addToolForm['tool-image'].value,
-                    link: addToolForm['tool-link'].value,
-                    timestamp: new Date() // Add a timestamp for ordering
+                    name: e.target.name.value,
+                    description: e.target.description.value,
+                    image: e.target.image.value,
+                    link: e.target.link.value,
+                    timestamp: new Date()
                 };
                 try {
                     await addDoc(collection(db, "tools"), newTool);
                     alert('Tool added successfully!');
-                    console.log('Tool added:', newTool.name);
-                    addToolForm.reset();
+                    e.target.reset();
                     fetchAndRenderTools();
                 } catch (error) {
                     console.error('Failed to add tool:', error.message);
@@ -277,71 +499,44 @@ const firebaseConfig = {
             });
         }
 
-        // --- CRUD Operations for Features ---
+        // Features
         const fetchAndRenderFeatures = async () => {
             console.log("Fetching features...");
             featuresList.innerHTML = '';
             const querySnapshot = await getDocs(collection(db, "features"));
+            if (querySnapshot.empty) {
+                featuresList.innerHTML = '<p class="text-gray-500">No features found.</p>';
+            }
             querySnapshot.forEach((doc) => {
                 const feature = doc.data();
-                const featureId = doc.id;
                 const featureCard = `
-                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm flex flex-col">
-                        <img src="${feature.image}" alt="${feature.name}" class="w-full h-32 object-cover mb-4 rounded">
-                        <h4 class="text-lg font-semibold">${feature.name}</h4>
-                        <p class="text-gray-600 text-sm mb-2 flex-grow">${feature.description}</p>
-                        <div class="mt-auto flex justify-end space-x-2">
-                            <button data-id="${featureId}" class="edit-feature-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
-                            <button data-id="${featureId}" class="delete-feature-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
+                    <div class="data-card" data-id="${doc.id}">
+                        <img src="${feature.image}" alt="${feature.name}">
+                        <h4>${feature.name}</h4>
+                        <p>${feature.description}</p>
+                        <div class="actions">
+                            <button data-id="${doc.id}" data-collection="features" class="edit-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
+                            <button data-id="${doc.id}" data-collection="features" class="delete-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
                         </div>
                     </div>
                 `;
                 featuresList.innerHTML += featureCard;
             });
-            attachFeatureEventListeners();
-            console.log("Features rendered.");
+            attachEventListeners('features-list', 'features', fetchAndRenderFeatures);
         };
-
-        const attachFeatureEventListeners = () => {
-            document.querySelectorAll('.delete-feature-btn').forEach(button => {
-                button.onclick = async (e) => {
-                    const featureId = e.target.dataset.id;
-                    if (confirm('Are you sure you want to delete this feature?')) {
-                        try {
-                            await deleteDoc(doc(db, "features", featureId));
-                            alert('Feature deleted successfully!');
-                            console.log('Feature deleted:', featureId);
-                            fetchAndRenderFeatures();
-                        } catch (error) {
-                            console.error('Failed to delete feature:', error.message);
-                            alert('Failed to delete feature: ' + error.message);
-                        }
-                    }
-                };
-            });
-
-            document.querySelectorAll('.edit-feature-btn').forEach(button => {
-                button.onclick = async (e) => {
-                    const featureId = e.target.dataset.id;
-                    alert('Edit functionality for feature ' + featureId + ' is not yet implemented.');
-                };
-            });
-        };
-
         if (addFeatureForm) {
             addFeatureForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const newFeature = {
-                    name: addFeatureForm['feature-name'].value,
-                    description: addFeatureForm['feature-description'].value,
-                    image: addFeatureForm['feature-image'].value,
+                    name: e.target.name.value,
+                    description: e.target.description.value,
+                    image: e.target.image.value,
                     timestamp: new Date()
                 };
                 try {
                     await addDoc(collection(db, "features"), newFeature);
                     alert('Feature added successfully!');
-                    console.log('Feature added:', newFeature.name);
-                    addFeatureForm.reset();
+                    e.target.reset();
                     fetchAndRenderFeatures();
                 } catch (error) {
                     console.error('Failed to add feature:', error.message);
@@ -350,55 +545,309 @@ const firebaseConfig = {
             });
         }
 
-        // --- CRUD Operations for FAQs ---
+        // FAQs
         const fetchAndRenderFAQs = async () => {
             console.log("Fetching FAQs...");
             faqsList.innerHTML = '';
             const querySnapshot = await getDocs(collection(db, "faqs"));
+            if (querySnapshot.empty) {
+                faqsList.innerHTML = '<p class="text-gray-500">No FAQs found.</p>';
+            }
             querySnapshot.forEach((doc) => {
                 const faq = doc.data();
-                const faqId = doc.id;
                 const faqCard = `
-                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
-                        <h4 class="text-lg font-semibold">${faq.question}</h4>
-                        <p class="text-gray-600 text-sm mb-2">${faq.answer}</p>
-                        <div class="flex justify-end space-x-2">
-                            <button data-id="${faqId}" class="edit-faq-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
-                            <button data-id="${faqId}" class="delete-faq-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
+                    <div class="data-card" data-id="${doc.id}">
+                        <h4>Q: ${faq.question}</h4>
+                        <p>A: ${faq.answer}</p>
+                        <div class="actions">
+                            <button data-id="${doc.id}" data-collection="faqs" class="edit-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
+                            <button data-id="${doc.id}" data-collection="faqs" class="delete-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
                         </div>
                     </div>
                 `;
                 faqsList.innerHTML += faqCard;
             });
-            attachFaqEventListeners();
-            console.log("FAQs rendered.");
+            attachEventListeners('faqs-list', 'faqs', fetchAndRenderFAQs);
+        };
+        if (addFaqForm) {
+            addFaqForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const newFaq = {
+                    question: e.target.question.value,
+                    answer: e.target.answer.value,
+                    timestamp: new Date()
+                };
+                try {
+                    await addDoc(collection(db, "faqs"), newFaq);
+                    alert('FAQ added successfully!');
+                    e.target.reset();
+                    fetchAndRenderFAQs();
+                } catch (error) {
+                    console.error('Failed to add FAQ:', error.message);
+                    alert('Failed to add FAQ: ' + error.message);
+                }
+            });
+        }
+
+        // Testimonials
+        const fetchAndRenderTestimonials = async () => {
+            console.log("Fetching testimonials...");
+            testimonialsList.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, "testimonials"));
+            if (querySnapshot.empty) {
+                testimonialsList.innerHTML = '<p class="text-gray-500">No testimonials found.</p>';
+            }
+            querySnapshot.forEach((doc) => {
+                const testimonial = doc.data();
+                const testimonialCard = `
+                    <div class="data-card" data-id="${doc.id}">
+                        ${testimonial.image ? `<img src="${testimonial.image}" alt="${testimonial.author}" class="rounded-full w-20 h-20 mx-auto mb-2 object-cover">` : ''}
+                        <h4>"${testimonial.quote}"</h4>
+                        <p class="text-gray-700 font-semibold mt-2">- ${testimonial.author}</p>
+                        ${testimonial.title ? `<p class="text-gray-500 text-sm">${testimonial.title}</p>` : ''}
+                        <div class="actions">
+                            <button data-id="${doc.id}" data-collection="testimonials" class="edit-btn bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-1 px-2 rounded">Edit</button>
+                            <button data-id="${doc.id}" data-collection="testimonials" class="delete-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
+                        </div>
+                    </div>
+                `;
+                testimonialsList.innerHTML += testimonialCard;
+            });
+            attachEventListeners('testimonials-list', 'testimonials', fetchAndRenderTestimonials);
+        };
+        if (addTestimonialForm) {
+            addTestimonialForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const newTestimonial = {
+                    author: e.target.author.value,
+                    title: e.target.title.value,
+                    quote: e.target.quote.value,
+                    image: e.target.image.value,
+                    timestamp: new Date()
+                };
+                try {
+                    await addDoc(collection(db, "testimonials"), newTestimonial);
+                    alert('Testimonial added successfully!');
+                    e.target.reset();
+                    fetchAndRenderTestimonials();
+                } catch (error) {
+                    console.error('Failed to add testimonial:', error.message);
+                    alert('Failed to add testimonial: ' + error.message);
+                }
+            });
+        }
+
+        // About (Single Document)
+        const fetchAndRenderAbout = async () => {
+            console.log("Fetching About data...");
+            const aboutDocRef = doc(db, "settings", "about"); // Assuming 'about' doc within 'settings' collection
+            try {
+                const docSnap = await getDoc(aboutDocRef);
+                if (docSnap.exists()) {
+                    const aboutData = docSnap.data();
+                    document.getElementById('about-heading-preview').textContent = aboutData.heading || 'No Heading';
+                    document.getElementById('about-description-preview').textContent = aboutData.description || 'No Description';
+                    document.getElementById('about-image-preview').src = aboutData.image || '';
+                    document.getElementById('about-image-preview').alt = aboutData.heading || 'About Image';
+
+                    // Populate form for editing
+                    updateAboutForm.heading.value = aboutData.heading || '';
+                    updateAboutForm.description.value = aboutData.description || '';
+                    updateAboutForm.image.value = aboutData.image || '';
+                } else {
+                    aboutPreview.innerHTML = '<p class="text-gray-500">No About data found. Add it using the form above.</p>';
+                    console.log("No 'about' document found in 'settings' collection.");
+                }
+            } catch (error) {
+                console.error("Error fetching about data:", error.message);
+                aboutPreview.innerHTML = `<p class="text-red-500">Error loading About data: ${error.message}</p>`;
+            }
+        };
+        if (updateAboutForm) {
+            updateAboutForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const aboutData = {
+                    heading: e.target.heading.value,
+                    description: e.target.description.value,
+                    image: e.target.image.value,
+                    lastUpdated: new Date()
+                };
+                try {
+                    await updateDoc(doc(db, "settings", "about"), aboutData, { merge: true }); // Use merge:true to update or create
+                    alert('About section updated successfully!');
+                    fetchAndRenderAbout();
+                } catch (error) {
+                    console.error('Failed to update About section:', error.message);
+                    alert('Failed to update About section: ' + error.message);
+                }
+            });
+        }
+
+        // Contact Info (Single Document)
+        const fetchAndRenderContactInfo = async () => {
+            console.log("Fetching Contact Info data...");
+            const contactInfoDocRef = doc(db, "settings", "contactInfo"); // Assuming 'contactInfo' doc within 'settings' collection
+            try {
+                const docSnap = await getDoc(contactInfoDocRef);
+                if (docSnap.exists()) {
+                    const contactData = docSnap.data();
+                    document.getElementById('contact-email-preview').textContent = contactData.email || 'N/A';
+                    document.getElementById('contact-phone-preview').textContent = contactData.phone || 'N/A';
+                    document.getElementById('contact-address-preview').textContent = contactData.address || 'N/A';
+
+                    // Populate form for editing
+                    updateContactInfoForm.email.value = contactData.email || '';
+                    updateContactInfoForm.phone.value = contactData.phone || '';
+                    updateContactInfoForm.address.value = contactData.address || '';
+                } else {
+                    contactInfoPreview.innerHTML = '<p class="text-gray-500">No Contact Info found. Add it using the form above.</p>';
+                    console.log("No 'contactInfo' document found in 'settings' collection.");
+                }
+            } catch (error) {
+                console.error("Error fetching contact info data:", error.message);
+                contactInfoPreview.innerHTML = `<p class="text-red-500">Error loading Contact Info: ${error.message}</p>`;
+            }
+        };
+        if (updateContactInfoForm) {
+            updateContactInfoForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const contactData = {
+                    email: e.target.email.value,
+                    phone: e.target.phone.value,
+                    address: e.target.address.value,
+                    lastUpdated: new Date()
+                };
+                try {
+                    await updateDoc(doc(db, "settings", "contactInfo"), contactData, { merge: true }); // Use merge:true to update or create
+                    alert('Contact Info updated successfully!');
+                    fetchAndRenderContactInfo();
+                } catch (error) {
+                    console.error('Failed to update Contact Info:', error.message);
+                    alert('Failed to update Contact Info: ' + error.message);
+                }
+            });
+        }
+
+        // Contact Submissions
+        const fetchAndRenderContactSubmissions = async () => {
+            console.log("Fetching Contact Submissions...");
+            contactSubmissionsList.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, "contactSubmissions"));
+            if (querySnapshot.empty) {
+                contactSubmissionsList.innerHTML = '<p class="text-gray-500">No contact submissions found.</p>';
+            }
+            querySnapshot.forEach((doc) => {
+                const submission = doc.data();
+                const submissionCard = `
+                    <div class="data-card" data-id="${doc.id}">
+                        <h4>From: ${submission.name} (${submission.email})</h4>
+                        <p><strong>Subject:</strong> ${submission.subject || 'N/A'}</p>
+                        <p><strong>Message:</strong> ${submission.message}</p>
+                        <p class="text-gray-500 text-sm">Submitted on: ${submission.timestamp ? new Date(submission.timestamp.toDate()).toLocaleString() : 'N/A'}</p>
+                        <div class="actions">
+                            <button data-id="${doc.id}" data-collection="contactSubmissions" class="delete-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
+                        </div>
+                    </div>
+                `;
+                contactSubmissionsList.innerHTML += submissionCard;
+            });
+            // For submissions, typically only delete is needed
+            attachEventListeners('contact-submissions-list', 'contactSubmissions', fetchAndRenderContactSubmissions);
         };
 
-        const attachFaqEventListeners = () => {
-            document.querySelectorAll('.delete-faq-btn').forEach(button => {
-                button.onclick = async (e) => {
-                    const faqId = e.target.dataset.id;
-                    if (confirm('Are you sure you want to delete this FAQ?')) {
-                        try {
-                            await deleteDoc(doc(db, "faqs", faqId));
-                            alert('FAQ deleted successfully!');
-                            console.log('FAQ deleted:', faqId);
-                            fetchAndRenderFAQs();
-                        } catch (error) {
-                            console.error('Failed to delete FAQ:', error.message);
-                            alert('Failed to delete FAQ: ' + error.message);
-                        }
+        // Newsletter Subscriptions
+        const fetchAndRenderNewsletterSubscriptions = async () => {
+            console.log("Fetching Newsletter Subscriptions...");
+            newsletterSubscriptionsList.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, "newsletterSubscriptions"));
+            if (querySnapshot.empty) {
+                newsletterSubscriptionsList.innerHTML = '<p class="text-gray-500">No newsletter subscriptions found.</p>';
+            }
+            querySnapshot.forEach((doc) => {
+                const subscription = doc.data();
+                const subscriptionCard = `
+                    <div class="data-card" data-id="${doc.id}">
+                        <h4>Email: ${subscription.email}</h4>
+                        <p class="text-gray-500 text-sm">Subscribed on: ${subscription.timestamp ? new Date(subscription.timestamp.toDate()).toLocaleString() : 'N/A'}</p>
+                        <div class="actions">
+                            <button data-id="${doc.id}" data-collection="newsletterSubscriptions" class="delete-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">Delete</button>
+                        </div>
+                    </div>
+                `;
+                newsletterSubscriptionsList.innerHTML += subscriptionCard;
+            });
+            // For subscriptions, typically only delete is needed
+            attachEventListeners('newsletter-subscriptions-list', 'newsletterSubscriptions', fetchAndRenderNewsletterSubscriptions);
+        };
+
+        // Announcement (Single Document)
+        const fetchAndRenderAnnouncement = async () => {
+            console.log("Fetching Announcement data...");
+            const announcementDocRef = doc(db, "settings", "announcement"); // Assuming 'announcement' doc within 'settings' collection
+            try {
+                const docSnap = await getDoc(announcementDocRef);
+                if (docSnap.exists()) {
+                    const announcementData = docSnap.data();
+                    document.getElementById('announcement-title-preview').textContent = announcementData.title || 'N/A';
+                    document.getElementById('announcement-message-preview').textContent = announcementData.message || 'N/A';
+                    document.getElementById('announcement-active-preview').textContent = announcementData.active ? 'Yes' : 'No';
+
+                    // Populate form for editing
+                    updateAnnouncementForm.title.value = announcementData.title || '';
+                    updateAnnouncementForm.message.value = announcementData.message || '';
+                    updateAnnouncementForm.active.checked = announcementData.active || false;
+                } else {
+                    announcementPreview.innerHTML = '<p class="text-gray-500">No Announcement data found. Add it using the form above.</p>';
+                    // Clear form fields if no doc exists
+                    updateAnnouncementForm.title.value = '';
+                    updateAnnouncementForm.message.value = '';
+                    updateAnnouncementForm.active.checked = false;
+                    console.log("No 'announcement' document found in 'settings' collection.");
+                }
+            } catch (error) {
+                console.error("Error fetching announcement data:", error.message);
+                announcementPreview.innerHTML = `<p class="text-red-500">Error loading Announcement data: ${error.message}</p>`;
+            }
+        };
+        if (updateAnnouncementForm) {
+            updateAnnouncementForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const announcementData = {
+                    title: e.target.title.value,
+                    message: e.target.message.value,
+                    active: e.target.active.checked,
+                    lastUpdated: new Date()
+                };
+                try {
+                    await updateDoc(doc(db, "settings", "announcement"), announcementData, { merge: true }); // Use merge:true to update or create
+                    alert('Announcement updated successfully!');
+                    fetchAndRenderAnnouncement();
+                } catch (error) {
+                    console.error('Failed to update Announcement:', error.message);
+                    alert('Failed to update Announcement: ' + error.message);
+                }
+            });
+        }
+        if (clearAnnouncementBtn) {
+            clearAnnouncementBtn.addEventListener('click', async () => {
+                if (confirm('Are you sure you want to clear the announcement? This will remove all its content.')) {
+                    try {
+                        // Clear by setting empty values or deleting the document
+                        await updateDoc(doc(db, "settings", "announcement"), {
+                            title: '',
+                            message: '',
+                            active: false,
+                            lastUpdated: new Date()
+                        });
+                        alert('Announcement cleared successfully!');
+                        fetchAndRenderAnnouncement();
+                    } catch (error) {
+                        console.error('Failed to clear announcement:', error.message);
+                        alert('Failed to clear announcement: ' + error.message);
                     }
-                };
+                }
             });
-
-            document.querySelectorAll('.edit-faq-btn').forEach(button => {
-                button.onclick = async (e) => {
-                    const faqId = e.target.dataset.id;
-                    alert('Edit functionality for FAQ ' + faqId + ' is not yet implemented.');
-                };
-            });
-        };
+        }
     </script>
 </body>
 </html>
