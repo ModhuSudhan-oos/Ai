@@ -3,443 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Awesome Website</title>
-    
+    <title>Your SaaS - AI Powered Solutions for Everything</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css">
-    
-    <style>
-        /* Custom styles for better aesthetics if needed */
-        .section-heading {
-            @apply text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center;
-        }
-        .card {
-            @apply bg-white rounded-lg shadow-md p-6 transform transition duration-300 hover:scale-105 hover:shadow-lg;
-        }
-        .card img {
-            @apply w-full h-40 object-cover rounded-t-lg mb-4;
-        }
-        .testimonial-card {
-            @apply flex flex-col items-center text-center;
-        }
-        .testimonial-card img {
-            @apply w-24 h-24 rounded-full object-cover mb-4 border-4 border-blue-500;
-        }
-    </style>
+    <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="font-sans antialiased text-gray-900 bg-gray-50">
+<body class="bg-gray-50 text-gray-800 font-inter">
 
-    <div id="announcement-bar" class="hidden bg-blue-600 text-white text-center py-2 text-sm">
-        <p><strong id="announcement-title"></strong>: <span id="announcement-message"></span></p>
+    <div id="announcement-banner" class="hidden bg-blue-600 text-white text-center py-2 relative">
+        <p id="announcement-text" class="px-4"></p>
+        <button id="close-announcement" class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-200 text-xl">&times;</button>
     </div>
 
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="#" class="text-2xl font-bold text-gray-800">Your Logo</a>
-            <div class="flex space-x-4">
-                <a href="#home" class="text-gray-600 hover:text-blue-500">Home</a>
-                <a href="#about" class="text-gray-600 hover:text-blue-500">About</a>
-                <a href="#features" class="text-gray-600 hover:text-blue-500">Features</a>
-                <a href="#tools" class="text-gray-600 hover:text-blue-500">Tools</a>
-                <a href="#testimonials" class="text-gray-600 hover:text-blue-500">Testimonials</a>
-                <a href="#faqs" class="text-gray-600 hover:text-blue-500">FAQs</a>
-                <a href="#contact" class="text-gray-600 hover:text-blue-500">Contact</a>
-                
-                </div>
+    <header class="bg-white shadow-lg sticky top-0 z-50 transition-transform duration-300">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="index.html" class="text-2xl font-bold text-blue-600">Your SaaS</a>
+            <button data-collapse-toggle="navbar-sticky" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200" aria-controls="navbar-sticky" aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+            </button>
+            <div class="hidden md:flex md:items-center md:space-x-8" id="navbar-sticky">
+                <a href="tools.html" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-600 md:p-0">Tools</a>
+                <a href="features.html" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-600 md:p-0">Features</a>
+                <a href="faq.html" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-600 md:p-0">FAQ</a>
+                <a href="about.html" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-600 md:p-0">About Us</a>
+                <a href="contact.html" class="block py-2 pr-4 pl-3 text-gray-700 hover:text-blue-600 md:p-0">Contact</a>
+                <a href="#" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition-colors duration-300">Get Started</a>
+            </div>
         </nav>
     </header>
 
-    <section id="home" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20 md:py-32 text-center">
-        <div class="container mx-auto px-6">
-            <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">Welcome to Your Awesome Platform</h1>
-            <p class="text-lg md:text-xl mb-8 opacity-90">Discover the best tools and features to boost your productivity.</p>
-            <a href="#tools" class="bg-white text-blue-600 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition duration-300">Explore Tools</a>
-        </div>
-    </section>
-
-    <section id="about" class="py-16 md:py-24 bg-white">
-        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
-            <div class="md:w-1/2 mb-8 md:mb-0 md:pr-12">
-                <h2 class="section-heading text-left">About Us</h2>
-                <h3 id="about-heading" class="text-2xl font-semibold mb-4 text-gray-700">Loading...</h3>
-                <p id="about-description" class="text-gray-600 leading-relaxed">Loading...</p>
-            </div>
-            <div class="md:w-1/2">
-                <img id="about-image" src="https://via.placeholder.com/600x400?text=About+Image" alt="About Us" class="rounded-lg shadow-lg">
-            </div>
-        </div>
-    </section>
-
-    <section id="features" class="py-16 md:py-24 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <h2 class="section-heading">Key Features</h2>
-            <div id="features-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <p class="text-center text-gray-500 col-span-full">Loading features...</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="tools" class="py-16 md:py-24 bg-white">
-        <div class="container mx-auto px-6">
-            <h2 class="section-heading">Our Top Tools</h2>
-            <div id="tools-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <p class="text-center text-gray-500 col-span-full">Loading tools...</p>
-            </div>
-        </div>
-    </section>
-    
-    <section id="testimonials" class="py-16 md:py-24 bg-blue-600 text-white">
-        <div class="container mx-auto px-6">
-            <h2 class="section-heading text-white">What Our Users Say</h2>
-            <div id="testimonials-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <p class="text-center text-gray-300 col-span-full">Loading testimonials...</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="faqs" class="py-16 md:py-24 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <h2 class="section-heading">Frequently Asked Questions</h2>
-            <div id="faqs-list" class="space-y-4 max-w-3xl mx-auto">
-                <p class="text-center text-gray-500">Loading FAQs...</p>
+    <main>
+        <section class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-20 md:py-32 flex items-center justify-center">
+            <div class="container mx-auto px-4 text-center grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="md:text-left animate-on-scroll">
+                    <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">Unleash Your Potential with AI</h1>
+                    <p class="text-lg md:text-xl mb-8 opacity-90">Revolutionary AI tools designed to simplify your work, boost creativity, and drive innovation.</p>
+                    <a href="tools.html" class="bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg">Explore Our Tools &rarr;</a>
                 </div>
-        </div>
-    </section>
+                <div class="flex justify-center md:justify-end animate-on-scroll" id="hero-animation" style="width: 100%; height: 300px;">
+                    </div>
+            </div>
+        </section>
 
-    <section id="contact" class="py-16 md:py-24 bg-white">
-        <div class="container mx-auto px-6">
-            <h2 class="section-heading">Get In Touch</h2>
-            <div class="flex flex-col md:flex-row gap-12">
-                <div class="md:w-1/2 bg-gray-50 p-8 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-bold mb-4">Contact Information</h3>
-                    <p class="text-gray-700 mb-2 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.774a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg><span id="contact-phone">Loading...</span></p>
-                    <p class="text-gray-700 mb-2 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg><span id="contact-email">Loading...</span></p>
-                    <p class="text-gray-700 flex items-start"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 mt-1 text-blue-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg><span id="contact-address">Loading...</span></p>
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-on-scroll">Our Powerful AI Tools</h2>
+                <div id="ai-tools-preview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <p class="col-span-full text-center text-gray-500">Loading AI Tools...</p>
                 </div>
-
-                <div class="md:w-1/2 bg-white p-8 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-bold mb-4">Send us a Message</h3>
-                    <form id="contact-form">
-                        <div class="mb-4">
-                            <label for="contact-name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
-                            <input type="text" id="contact-name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="contact-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                            <input type="email" id="contact-email-form" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="contact-subject" class="block text-gray-700 text-sm font-bold mb-2">Subject (Optional):</label>
-                            <input type="text" id="contact-subject" name="subject" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        </div>
-                        <div class="mb-6">
-                            <label for="contact-message" class="block text-gray-700 text-sm font-bold mb-2">Message:</label>
-                            <textarea id="contact-message" name="message" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="4" required></textarea>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                Send Message
-                            </button>
-                        </div>
-                    </form>
+                <div class="text-center mt-12 animate-on-scroll">
+                    <a href="tools.html" class="inline-block bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-lg">View All Tools</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="newsletter" class="bg-gray-800 text-white py-16 md:py-24 text-center">
-        <div class="container mx-auto px-6 max-w-2xl">
-            <h2 class="text-3xl font-bold mb-4">Stay Updated!</h2>
-            <p class="text-lg mb-8 opacity-90">Subscribe to our newsletter for the latest tools and features.</p>
-            <form id="newsletter-form" class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <input type="email" name="email" placeholder="Your email address" class="p-3 rounded-lg flex-grow sm:w-auto w-full text-gray-900" required>
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg w-full sm:w-auto">Subscribe</button>
-            </form>
-        </div>
-    </section>
+        <section class="py-16 bg-blue-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-on-scroll">Transform Your Workflow</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-8 animate-on-scroll">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 text-blue-600 text-4xl">💡</div>
+                            <div>
+                                <h3 class="text-2xl font-semibold text-gray-900 mb-2">Boost Creativity</h3>
+                                <p class="text-gray-700">Generate new ideas, overcome writer's block, and explore endless creative possibilities with AI assistance.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 text-blue-600 text-4xl">⏱️</div>
+                            <div>
+                                <h3 class="text-2xl font-semibold text-gray-900 mb-2">Save Time & Resources</h3>
+                                <p class="text-gray-700">Automate repetitive tasks, reduce manual effort, and free up your valuable time for strategic work.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 text-blue-600 text-4xl">📈</div>
+                            <div>
+                                <h3 class="text-2xl font-semibold text-gray-900 mb-2">Enhance Productivity</h3>
+                                <p class="text-gray-700">Achieve more in less time with intelligent tools that streamline your processes and optimize output.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animate-on-scroll">
+                        <img src="/assets/benefits-illustration.svg" alt="Benefits Illustration" class="mx-auto w-full max-w-md">
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <footer class="bg-gray-900 text-gray-400 py-10">
-        <div class="container mx-auto px-6 text-center text-sm">
-            <p>&copy; 2024 Your Company. All rights reserved.</p>
-            <div class="flex justify-center space-x-4 mt-4">
-                <a href="#" class="hover:text-white">Privacy Policy</a>
-                <a href="#" class="hover:text-white">Terms of Service</a>
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-gray-900 mb-12 animate-on-scroll">What Our Users Say</h2>
+                <div id="testimonials-carousel" class="flex overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+                    <p class="min-w-full text-center text-gray-500">Loading testimonials...</p>
+                </div>
+                <div class="text-center mt-8 text-gray-600 text-sm">
+                    Scroll to see more testimonials &rarr;
+                </div>
             </div>
+        </section>
+
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16 text-center">
+            <div class="container mx-auto px-4 animate-on-scroll">
+                <h2 class="text-4xl font-bold mb-4">Ready to Get Started?</h2>
+                <p class="text-xl mb-8 opacity-90">Join thousands of happy users benefiting from our cutting-edge AI platform.</p>
+                <a href="tools.html" class="bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors duration-300 shadow-lg">Start Your Journey Today &rarr;</a>
             </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-12">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Your SaaS</h3>
+                <p class="text-sm">Empowering your business with intelligent AI solutions.</p>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="tools.html" class="hover:text-white transition-colors duration-200">Tools</a></li>
+                    <li><a href="features.html" class="hover:text-white transition-colors duration-200">Features</a></li>
+                    <li><a href="faq.html" class="hover:text-white transition-colors duration-200">FAQ</a></li>
+                    <li><a href="about.html" class="hover:text-white transition-colors duration-200">About Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Contact Us</h3>
+                <p class="text-sm mb-2" id="footer-email">Email: Loading...</p>
+                <p class="text-sm mb-2" id="footer-phone">Phone: Loading...</p>
+                <div class="flex space-x-4 mt-4">
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook-square"></i></a>
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-twitter-square"></i></a>
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-500 text-sm">
+            &copy; 2025 Your SaaS. All rights reserved.
+        </div>
     </footer>
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
-        import { getFirestore, collection, getDocs, doc, getDoc, addDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+    <div id="cookie-consent" class="hidden fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-4 flex flex-col md:flex-row items-center justify-between z-[100] shadow-lg">
+        <p class="text-sm mb-2 md:mb-0 text-center md:text-left">
+            We use cookies to ensure you get the best experience on our website. By continuing to use this site, you agree to our <a href="#" class="text-blue-400 hover:underline">cookie policy</a>.
+        </p>
+        <button id="accept-cookies" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-300">
+            Accept
+        </button>
+    </div>
 
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBVpddOtX1yRxslNxh8yz3SJq53eUYhkZ0",
-  authDomain: "next-gen-186aa.firebaseapp.com",
-  projectId: "next-gen-186aa",
-  storageBucket: "next-gen-186aa.firebasestorage.app",
-  messagingSenderId: "338569531164",
-  appId: "1:338569531164:web:932df077b59a0a371b34d9",
-  measurementId: "G-7GCT5KHFQ0"
-};
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // --- DOM Elements ---
-        const announcementBar = document.getElementById('announcement-bar');
-        const announcementTitle = document.getElementById('announcement-title');
-        const announcementMessage = document.getElementById('announcement-message');
-
-        const aboutHeading = document.getElementById('about-heading');
-        const aboutDescription = document.getElementById('about-description');
-        const aboutImage = document.getElementById('about-image');
-
-        const featuresList = document.getElementById('features-list');
-        const toolsList = document.getElementById('tools-list');
-        const testimonialsList = document.getElementById('testimonials-list');
-        const faqsList = document.getElementById('faqs-list');
-
-        const contactPhone = document.getElementById('contact-phone');
-        const contactEmail = document.getElementById('contact-email');
-        const contactAddress = document.getElementById('contact-address');
-
-        const contactForm = document.getElementById('contact-form');
-        const newsletterForm = document.getElementById('newsletter-form');
-
-        // --- Fetch and Render Functions ---
-
-        // Fetch and Render Announcement
-        const fetchAndRenderAnnouncement = async () => {
-            const announcementDocRef = doc(db, "settings", "announcement");
-            try {
-                const docSnap = await getDoc(announcementDocRef);
-                if (docSnap.exists() && docSnap.data().active) {
-                    const data = docSnap.data();
-                    announcementTitle.textContent = data.title || '';
-                    announcementMessage.textContent = data.message || '';
-                    announcementBar.style.display = 'block';
-                } else {
-                    announcementBar.style.display = 'none';
-                }
-            } catch (error) {
-                console.error("Error fetching announcement:", error);
-                announcementBar.style.display = 'none';
-            }
-        };
-
-        // Fetch and Render About Section
-        const fetchAndRenderAbout = async () => {
-            const aboutDocRef = doc(db, "settings", "about");
-            try {
-                const docSnap = await getDoc(aboutDocRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    aboutHeading.textContent = data.heading || 'Our Story';
-                    aboutDescription.textContent = data.description || 'Discover more about our mission and vision.';
-                    aboutImage.src = data.image || 'https://via.placeholder.com/600x400?text=About+Image';
-                } else {
-                    aboutHeading.textContent = 'Our Story';
-                    aboutDescription.textContent = 'Please update the About section from the admin panel.';
-                    aboutImage.src = 'https://via.placeholder.com/600x400?text=About+Image';
-                }
-            } catch (error) {
-                console.error("Error fetching about data:", error);
-                aboutHeading.textContent = 'Error Loading About';
-                aboutDescription.textContent = 'Could not load about information. Please check your connection.';
-                aboutImage.src = 'https://via.placeholder.com/600x400?text=Error';
-            }
-        };
-
-        // Fetch and Render Features
-        const fetchAndRenderFeatures = async () => {
-            featuresList.innerHTML = '<p class="text-center text-gray-500 col-span-full">Loading features...</p>';
-            try {
-                const querySnapshot = await getDocs(collection(db, "features"));
-                if (querySnapshot.empty) {
-                    featuresList.innerHTML = '<p class="text-center text-gray-500 col-span-full">No features available yet.</p>';
-                    return;
-                }
-                let featuresHtml = '';
-                querySnapshot.forEach((doc) => {
-                    const feature = doc.data();
-                    featuresHtml += `
-                        <div class="card">
-                            <img src="${feature.image}" alt="${feature.name}">
-                            <h3 class="text-xl font-semibold mb-2">${feature.name}</h3>
-                            <p class="text-gray-600">${feature.description}</p>
-                        </div>
-                    `;
-                });
-                featuresList.innerHTML = featuresHtml;
-            } catch (error) {
-                console.error("Error fetching features:", error);
-                featuresList.innerHTML = '<p class="text-center text-red-500 col-span-full">Error loading features.</p>';
-            }
-        };
-
-        // Fetch and Render Tools
-        const fetchAndRenderTools = async () => {
-            toolsList.innerHTML = '<p class="text-center text-gray-500 col-span-full">Loading tools...</p>';
-            try {
-                const querySnapshot = await getDocs(collection(db, "tools"));
-                if (querySnapshot.empty) {
-                    toolsList.innerHTML = '<p class="text-center text-gray-500 col-span-full">No tools available yet.</p>';
-                    return;
-                }
-                let toolsHtml = '';
-                querySnapshot.forEach((doc) => {
-                    const tool = doc.data();
-                    toolsHtml += `
-                        <div class="card">
-                            <img src="${tool.image}" alt="${tool.name}">
-                            <h3 class="text-xl font-semibold mb-2">${tool.name}</h3>
-                            <p class="text-gray-600 mb-4">${tool.description}</p>
-                            <a href="${tool.link}" target="_blank" class="text-blue-500 hover:underline font-medium">Learn More &rarr;</a>
-                        </div>
-                    `;
-                });
-                toolsList.innerHTML = toolsHtml;
-            } catch (error) {
-                console.error("Error fetching tools:", error);
-                toolsList.innerHTML = '<p class="text-center text-red-500 col-span-full">Error loading tools.</p>';
-            }
-        };
-
-        // Fetch and Render Testimonials
-        const fetchAndRenderTestimonials = async () => {
-            testimonialsList.innerHTML = '<p class="text-center text-gray-300 col-span-full">Loading testimonials...</p>';
-            try {
-                const querySnapshot = await getDocs(collection(db, "testimonials"));
-                if (querySnapshot.empty) {
-                    testimonialsList.innerHTML = '<p class="text-center text-gray-300 col-span-full">No testimonials available yet.</p>';
-                    return;
-                }
-                let testimonialsHtml = '';
-                querySnapshot.forEach((doc) => {
-                    const testimonial = doc.data();
-                    testimonialsHtml += `
-                        <div class="testimonial-card bg-white text-gray-800 p-6 rounded-lg shadow-md">
-                            ${testimonial.image ? `<img src="${testimonial.image}" alt="${testimonial.author}">` : `<img src="https://via.placeholder.com/96x96?text=User" alt="Placeholder" class="rounded-full w-24 h-24 object-cover mb-4 border-4 border-blue-500">`}
-                            <p class="italic text-lg mb-4">"${testimonial.quote}"</p>
-                            <p class="font-semibold text-blue-600">- ${testimonial.author}</p>
-                            ${testimonial.title ? `<p class="text-sm text-gray-500">${testimonial.title}</p>` : ''}
-                        </div>
-                    `;
-                });
-                testimonialsList.innerHTML = testimonialsHtml;
-            } catch (error) {
-                console.error("Error fetching testimonials:", error);
-                testimonialsList.innerHTML = '<p class="text-center text-red-300 col-span-full">Error loading testimonials.</p>';
-            }
-        };
-
-        // Fetch and Render FAQs
-        const fetchAndRenderFAQs = async () => {
-            faqsList.innerHTML = '<p class="text-center text-gray-500">Loading FAQs...</p>';
-            try {
-                const querySnapshot = await getDocs(collection(db, "faqs"));
-                if (querySnapshot.empty) {
-                    faqsList.innerHTML = '<p class="text-center text-gray-500">No FAQs available yet.</p>';
-                    return;
-                }
-                let faqsHtml = '';
-                querySnapshot.forEach((doc) => {
-                    const faq = doc.data();
-                    faqsHtml += `
-                        <div class="bg-white rounded-lg shadow-sm p-5">
-                            <h3 class="text-lg font-semibold mb-2">${faq.question}</h3>
-                            <p class="text-gray-600">${faq.answer}</p>
-                        </div>
-                    `;
-                });
-                faqsList.innerHTML = faqsHtml;
-            } catch (error) {
-                console.error("Error fetching FAQs:", error);
-                faqsList.innerHTML = '<p class="text-center text-red-500">Error loading FAQs.</p>';
-            }
-        };
-
-        // Fetch and Render Contact Info
-        const fetchAndRenderContactInfo = async () => {
-            const contactInfoDocRef = doc(db, "settings", "contactInfo");
-            try {
-                const docSnap = await getDoc(contactInfoDocRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    contactPhone.textContent = data.phone || 'N/A';
-                    contactEmail.textContent = data.email || 'N/A';
-                    contactAddress.textContent = data.address || 'N/A';
-                } else {
-                    contactPhone.textContent = 'N/A';
-                    contactEmail.textContent = 'N/A';
-                    contactAddress.textContent = 'N/A';
-                    console.log("No contactInfo document found in settings.");
-                }
-            } catch (error) {
-                console.error("Error fetching contact info:", error);
-                contactPhone.textContent = 'Error';
-                contactEmail.textContent = 'Error';
-                contactAddress.textContent = 'Error';
-            }
-        };
-
-        // --- Form Submissions ---
-
-        // Contact Form Submission
-        if (contactForm) {
-            contactForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const submission = {
-                    name: contactForm['contact-name'].value,
-                    email: contactForm['contact-email-form'].value, // Note: ID changed to avoid conflict with contact info display
-                    subject: contactForm['contact-subject'].value,
-                    message: contactForm['contact-message'].value,
-                    timestamp: new Date(),
-                };
-                try {
-                    await addDoc(collection(db, "contactSubmissions"), submission);
-                    alert('Your message has been sent successfully!');
-                    contactForm.reset();
-                } catch (error) {
-                    console.error('Failed to send message:', error);
-                    alert('Failed to send message. Please try again later.');
-                }
-            });
-        }
-
-        // Newsletter Form Submission
-        if (newsletterForm) {
-            newsletterForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const subscription = {
-                    email: newsletterForm['email'].value,
-                    timestamp: new Date(),
-                };
-                try {
-                    await addDoc(collection(db, "newsletterSubscriptions"), subscription);
-                    alert('Successfully subscribed to our newsletter!');
-                    newsletterForm.reset();
-                } catch (error) {
-                    console.error('Failed to subscribe:', error);
-                    alert('Failed to subscribe. Please try again later.');
-                }
-            });
-        }
-
-        // --- Initial Data Load ---
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchAndRenderAnnouncement();
-            fetchAndRenderAbout();
-            fetchAndRenderFeatures();
-            fetchAndRenderTools();
-            fetchAndRenderTestimonials();
-            fetchAndRenderFAQs();
-            fetchAndRenderContactInfo();
-        });
-    </script>
+    <script type="module" src="script.js"></script>
 </body>
-                                                                                                                                                                                                                                   </html>
+</html>
