@@ -3,447 +3,443 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextGen AI - Dynamic SaaS Platform</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Your Awesome Website</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        /* Custom styles for better aesthetics if needed */
+        .section-heading {
+            @apply text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center;
+        }
+        .card {
+            @apply bg-white rounded-lg shadow-md p-6 transform transition duration-300 hover:scale-105 hover:shadow-lg;
+        }
+        .card img {
+            @apply w-full h-40 object-cover rounded-t-lg mb-4;
+        }
+        .testimonial-card {
+            @apply flex flex-col items-center text-center;
+        }
+        .testimonial-card img {
+            @apply w-24 h-24 rounded-full object-cover mb-4 border-4 border-blue-500;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="font-sans antialiased text-gray-900 bg-gray-50">
 
-    <div id="announcement-banner" class="hidden bg-blue-600 text-white text-center p-3 text-sm font-medium">
-        <span id="announcement-message"></span>
+    <div id="announcement-bar" class="hidden bg-blue-600 text-white text-center py-2 text-sm">
+        <p><strong id="announcement-title"></strong>: <span id="announcement-message"></span></p>
     </div>
 
-    <header class="bg-white shadow-sm p-4 sticky top-0 z-10">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-blue-700">NextGen AI</h1>
-            <nav>
-                <ul class="flex space-x-4">
-                    <li><a href="#tools" class="text-gray-600 hover:text-blue-700 font-medium">Tools</a></li>
-                    <li><a href="#features" class="text-gray-600 hover:text-blue-700 font-medium">Features</a></li>
-                    <li><a href="#faqs" class="text-gray-600 hover:text-blue-700 font-medium">FAQs</a></li>
-                    <li><a href="#testimonials" class="text-gray-600 hover:text-blue-700 font-medium">Testimonials</a></li>
-                    <li><a href="#about" class="text-gray-600 hover:text-blue-700 font-medium">About</a></li>
-                    <li><a href="#contact" class="text-gray-600 hover:text-blue-700 font-medium">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="text-2xl font-bold text-gray-800">Your Logo</a>
+            <div class="flex space-x-4">
+                <a href="#home" class="text-gray-600 hover:text-blue-500">Home</a>
+                <a href="#about" class="text-gray-600 hover:text-blue-500">About</a>
+                <a href="#features" class="text-gray-600 hover:text-blue-500">Features</a>
+                <a href="#tools" class="text-gray-600 hover:text-blue-500">Tools</a>
+                <a href="#testimonials" class="text-gray-600 hover:text-blue-500">Testimonials</a>
+                <a href="#faqs" class="text-gray-600 hover:text-blue-500">FAQs</a>
+                <a href="#contact" class="text-gray-600 hover:text-blue-500">Contact</a>
+                
+                </div>
+        </nav>
     </header>
 
-    <main class="container mx-auto p-6">
-        <section class="text-center py-20 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md mb-12">
-            <h2 class="text-5xl font-extrabold text-gray-900 mb-4">Unleash Your Potential with AI</h2>
-            <p class="text-xl text-gray-600 mb-8">Revolutionary AI tools designed to simplify your work and boost creativity.</p>
-            <button class="bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-lg">Get Started</button>
-        </section>
+    <section id="home" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20 md:py-32 text-center">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">Welcome to Your Awesome Platform</h1>
+            <p class="text-lg md:text-xl mb-8 opacity-90">Discover the best tools and features to boost your productivity.</p>
+            <a href="#tools" class="bg-white text-blue-600 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition duration-300">Explore Tools</a>
+        </div>
+    </section>
 
-        <section id="tools" class="py-12">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-10">Our AI Tools</h2>
-            <div id="tools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <p class="text-center col-span-full text-gray-500">Loading AI tools...</p>
+    <section id="about" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
+            <div class="md:w-1/2 mb-8 md:mb-0 md:pr-12">
+                <h2 class="section-heading text-left">About Us</h2>
+                <h3 id="about-heading" class="text-2xl font-semibold mb-4 text-gray-700">Loading...</h3>
+                <p id="about-description" class="text-gray-600 leading-relaxed">Loading...</p>
             </div>
-        </section>
-
-        <section id="features" class="py-12 bg-gray-100 rounded-lg shadow-md mb-12">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-10">Why Choose Us?</h2>
-            <div id="features-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
-                <p class="text-center col-span-full text-gray-500">Loading features...</p>
+            <div class="md:w-1/2">
+                <img id="about-image" src="https://via.placeholder.com/600x400?text=About+Image" alt="About Us" class="rounded-lg shadow-lg">
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="faqs" class="py-12">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-10">Frequently Asked Questions</h2>
-            <div id="faqs-container" class="max-w-3xl mx-auto space-y-4">
+    <section id="features" class="py-16 md:py-24 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="section-heading">Key Features</h2>
+            <div id="features-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <p class="text-center text-gray-500 col-span-full">Loading features...</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="tools" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-heading">Our Top Tools</h2>
+            <div id="tools-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <p class="text-center text-gray-500 col-span-full">Loading tools...</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="testimonials" class="py-16 md:py-24 bg-blue-600 text-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-heading text-white">What Our Users Say</h2>
+            <div id="testimonials-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <p class="text-center text-gray-300 col-span-full">Loading testimonials...</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="faqs" class="py-16 md:py-24 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="section-heading">Frequently Asked Questions</h2>
+            <div id="faqs-list" class="space-y-4 max-w-3xl mx-auto">
                 <p class="text-center text-gray-500">Loading FAQs...</p>
-            </div>
-        </section>
-
-        <section id="testimonials" class="py-12 bg-blue-50 rounded-lg shadow-md mb-12">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-10">What Our Clients Say</h2>
-            <div id="testimonials-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
-                <p class="text-center col-span-full text-gray-500">Loading testimonials...</p>
-            </div>
-        </section>
-
-        <section id="about" class="py-12">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-10">About Us</h2>
-            <div id="about-container" class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-                <div id="about-mission" class="mb-6">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Our Mission</h3>
-                    <p class="text-gray-700">Loading mission...</p>
                 </div>
-                <div id="about-story" class="mb-6">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Our Story</h3>
-                    <p class="text-gray-700">Loading story...</p>
-                </div>
-                <div id="about-team">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Meet Our Team</h3>
-                    <div id="team-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <p class="text-center col-span-full text-gray-500">Loading team...</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="contact" class="py-12 bg-gray-100 rounded-lg shadow-md mb-12">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-10">Get in Touch</h2>
-            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Contact Information</h3>
-                    <p class="text-gray-700 mb-2"><strong class="text-blue-700">Email:</strong> <span id="contact-email">Loading...</span></p>
-                    <p class="text-gray-700 mb-2"><strong class="text-blue-700">Phone:</strong> <span id="contact-phone">Loading...</span></p>
-                    <p class="text-gray-700 mb-4"><strong class="text-blue-700">Address:</strong> <span id="contact-address">Loading...</span></p>
-                    <div id="social-links" class="flex space-x-4">
-                        </div>
+    <section id="contact" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-heading">Get In Touch</h2>
+            <div class="flex flex-col md:flex-row gap-12">
+                <div class="md:w-1/2 bg-gray-50 p-8 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-4">Contact Information</h3>
+                    <p class="text-gray-700 mb-2 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.774a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg><span id="contact-phone">Loading...</span></p>
+                    <p class="text-gray-700 mb-2 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg><span id="contact-email">Loading...</span></p>
+                    <p class="text-gray-700 flex items-start"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 mt-1 text-blue-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg><span id="contact-address">Loading...</span></p>
                 </div>
 
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Send us a Message</h3>
+                <div class="md:w-1/2 bg-white p-8 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-4">Send us a Message</h3>
                     <form id="contact-form">
-                        <input type="text" id="contact-name" placeholder="Your Name" class="w-full p-3 mb-4 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                        <input type="email" id="contact-email-form" placeholder="Your Email" class="w-full p-3 mb-4 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                        <textarea id="contact-message" placeholder="Your Message" rows="5" class="w-full p-3 mb-4 border rounded-lg focus:ring-blue-500 focus:border-blue-500"></textarea>
-                        <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300">Send Message</button>
-                        <p id="contact-form-message" class="mt-3 text-sm text-center"></p>
+                        <div class="mb-4">
+                            <label for="contact-name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                            <input type="text" id="contact-name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="contact-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                            <input type="email" id="contact-email-form" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="contact-subject" class="block text-gray-700 text-sm font-bold mb-2">Subject (Optional):</label>
+                            <input type="text" id="contact-subject" name="subject" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-6">
+                            <label for="contact-message" class="block text-gray-700 text-sm font-bold mb-2">Message:</label>
+                            <textarea id="contact-message" name="message" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="4" required></textarea>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Send Message
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="py-12 text-center bg-purple-600 text-white rounded-lg shadow-md mb-12">
-            <h2 class="text-4xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-            <p class="text-lg mb-6">Get the latest AI news and updates directly to your inbox!</p>
-            <form id="newsletter-form" class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
-                <input type="email" id="newsletter-email" placeholder="Enter your email" class="p-3 rounded-lg w-full md:w-auto min-w-[250px] text-gray-900 focus:ring-blue-500 focus:border-blue-500">
-                <button type="submit" class="bg-white text-purple-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">Subscribe</button>
+    <section id="newsletter" class="bg-gray-800 text-white py-16 md:py-24 text-center">
+        <div class="container mx-auto px-6 max-w-2xl">
+            <h2 class="text-3xl font-bold mb-4">Stay Updated!</h2>
+            <p class="text-lg mb-8 opacity-90">Subscribe to our newsletter for the latest tools and features.</p>
+            <form id="newsletter-form" class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <input type="email" name="email" placeholder="Your email address" class="p-3 rounded-lg flex-grow sm:w-auto w-full text-gray-900" required>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg w-full sm:w-auto">Subscribe</button>
             </form>
-            <p id="newsletter-form-message" class="mt-3 text-sm text-center"></p>
-        </section>
+        </div>
+    </section>
 
-    </main>
-
-    <footer class="bg-gray-800 text-white p-6 text-center">
-        <p>&copy; 2025 NextGen AI. All rights reserved.</p>
+    <footer class="bg-gray-900 text-gray-400 py-10">
+        <div class="container mx-auto px-6 text-center text-sm">
+            <p>&copy; 2024 Your Company. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="hover:text-white">Privacy Policy</a>
+                <a href="#" class="hover:text-white">Terms of Service</a>
+            </div>
+            </div>
     </footer>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getFirestore, collection, doc, getDoc, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+        import { getFirestore, collection, getDocs, doc, getDoc, addDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
-        // Your Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVpddOtX1yRxslNxh8yz3SJq53eUYhkZ0",
-            authDomain: "next-gen-186aa.firebaseapp.com",
-            projectId: "next-gen-186aa",
-            storageBucket: "next-gen-186aa.firebasestorage.app",
-            messagingSenderId: "338569531164",
-            appId: "1:338569531164:web:932df077b59a0a371b34d9",
-            measurementId: "G-7GCT5KHFQ0"
-        };
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBVpddOtX1yRxslNxh8yz3SJq53eUYhkZ0",
+  authDomain: "next-gen-186aa.firebaseapp.com",
+  projectId: "next-gen-186aa",
+  storageBucket: "next-gen-186aa.firebasestorage.app",
+  messagingSenderId: "338569531164",
+  appId: "1:338569531164:web:932df077b59a0a371b34d9",
+  measurementId: "G-7GCT5KHFQ0"
+};
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app); // Get Firestore instance
+        const db = getFirestore(app);
 
-        // --- Fetch and Render Data Functions ---
+        // --- DOM Elements ---
+        const announcementBar = document.getElementById('announcement-bar');
+        const announcementTitle = document.getElementById('announcement-title');
+        const announcementMessage = document.getElementById('announcement-message');
 
-        async function fetchAndRenderAnnouncement() {
-            const banner = document.getElementById('announcement-banner');
-            const messageSpan = document.getElementById('announcement-message');
+        const aboutHeading = document.getElementById('about-heading');
+        const aboutDescription = document.getElementById('about-description');
+        const aboutImage = document.getElementById('about-image');
+
+        const featuresList = document.getElementById('features-list');
+        const toolsList = document.getElementById('tools-list');
+        const testimonialsList = document.getElementById('testimonials-list');
+        const faqsList = document.getElementById('faqs-list');
+
+        const contactPhone = document.getElementById('contact-phone');
+        const contactEmail = document.getElementById('contact-email');
+        const contactAddress = document.getElementById('contact-address');
+
+        const contactForm = document.getElementById('contact-form');
+        const newsletterForm = document.getElementById('newsletter-form');
+
+        // --- Fetch and Render Functions ---
+
+        // Fetch and Render Announcement
+        const fetchAndRenderAnnouncement = async () => {
+            const announcementDocRef = doc(db, "settings", "announcement");
             try {
-                const docRef = doc(db, "announcement", "current");
-                const docSnap = await getDoc(docRef);
+                const docSnap = await getDoc(announcementDocRef);
                 if (docSnap.exists() && docSnap.data().active) {
-                    messageSpan.textContent = docSnap.data().message;
-                    banner.classList.remove('hidden');
+                    const data = docSnap.data();
+                    announcementTitle.textContent = data.title || '';
+                    announcementMessage.textContent = data.message || '';
+                    announcementBar.style.display = 'block';
                 } else {
-                    banner.classList.add('hidden');
+                    announcementBar.style.display = 'none';
                 }
             } catch (error) {
                 console.error("Error fetching announcement:", error);
-                banner.classList.add('hidden'); // Hide on error
+                announcementBar.style.display = 'none';
             }
-        }
+        };
 
-        async function fetchAndRenderTools() {
-            const container = document.getElementById('tools-container');
-            container.innerHTML = '<p class="text-center col-span-full text-gray-500">Loading AI tools...</p>';
+        // Fetch and Render About Section
+        const fetchAndRenderAbout = async () => {
+            const aboutDocRef = doc(db, "settings", "about");
             try {
-                const querySnapshot = await getDocs(collection(db, "tools"));
-                container.innerHTML = ''; // Clear loading message
-                if (querySnapshot.empty) {
-                    container.innerHTML = '<p class="text-center col-span-full text-gray-500">No AI tools available yet.</p>';
-                    return;
+                const docSnap = await getDoc(aboutDocRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    aboutHeading.textContent = data.heading || 'Our Story';
+                    aboutDescription.textContent = data.description || 'Discover more about our mission and vision.';
+                    aboutImage.src = data.image || 'https://via.placeholder.com/600x400?text=About+Image';
+                } else {
+                    aboutHeading.textContent = 'Our Story';
+                    aboutDescription.textContent = 'Please update the About section from the admin panel.';
+                    aboutImage.src = 'https://via.placeholder.com/600x400?text=About+Image';
                 }
-                querySnapshot.forEach((doc) => {
-                    const tool = doc.data();
-                    const toolCard = `
-                        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center">
-                            <img src="${tool.image || '/placeholder.png'}" alt="${tool.title}" class="w-24 h-24 object-contain mb-4">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">${tool.title}</h3>
-                            <p class="text-gray-600 mb-4 flex-grow">${tool.description}</p>
-                            ${tool.features && tool.features.length > 0 ? `
-                                <div class="flex flex-wrap justify-center gap-2 mb-4">
-                                    ${tool.features.map(f => `<span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${f}</span>`).join('')}
-                                </div>
-                            ` : ''}
-                            <a href="${tool.url}" target="_blank" class="mt-auto bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition duration-300">Launch Tool</a>
-                        </div>
-                    `;
-                    container.insertAdjacentHTML('beforeend', toolCard);
-                });
             } catch (error) {
-                console.error("Error fetching tools:", error);
-                container.innerHTML = '<p class="text-center col-span-full text-red-500">Failed to load tools. Please try again later.</p>';
+                console.error("Error fetching about data:", error);
+                aboutHeading.textContent = 'Error Loading About';
+                aboutDescription.textContent = 'Could not load about information. Please check your connection.';
+                aboutImage.src = 'https://via.placeholder.com/600x400?text=Error';
             }
-        }
+        };
 
-        async function fetchAndRenderFeatures() {
-            const container = document.getElementById('features-container');
-            container.innerHTML = '<p class="text-center col-span-full text-gray-500">Loading features...</p>';
+        // Fetch and Render Features
+        const fetchAndRenderFeatures = async () => {
+            featuresList.innerHTML = '<p class="text-center text-gray-500 col-span-full">Loading features...</p>';
             try {
                 const querySnapshot = await getDocs(collection(db, "features"));
-                container.innerHTML = '';
                 if (querySnapshot.empty) {
-                    container.innerHTML = '<p class="text-center col-span-full text-gray-500">No features available yet.</p>';
+                    featuresList.innerHTML = '<p class="text-center text-gray-500 col-span-full">No features available yet.</p>';
                     return;
                 }
+                let featuresHtml = '';
                 querySnapshot.forEach((doc) => {
                     const feature = doc.data();
-                    const featureCard = `
-                        <div class="bg-white rounded-lg shadow-sm p-6 text-center">
-                            <div class="text-4xl mb-3">${feature.icon || '⭐'}</div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">${feature.title}</h3>
+                    featuresHtml += `
+                        <div class="card">
+                            <img src="${feature.image}" alt="${feature.name}">
+                            <h3 class="text-xl font-semibold mb-2">${feature.name}</h3>
                             <p class="text-gray-600">${feature.description}</p>
                         </div>
                     `;
-                    container.insertAdjacentHTML('beforeend', featureCard);
                 });
+                featuresList.innerHTML = featuresHtml;
             } catch (error) {
                 console.error("Error fetching features:", error);
-                container.innerHTML = '<p class="text-center col-span-full text-red-500">Failed to load features. Please try again later.</p>';
+                featuresList.innerHTML = '<p class="text-center text-red-500 col-span-full">Error loading features.</p>';
             }
-        }
+        };
 
-        async function fetchAndRenderFAQs() {
-            const container = document.getElementById('faqs-container');
-            container.innerHTML = '<p class="text-center text-gray-500">Loading FAQs...</p>';
+        // Fetch and Render Tools
+        const fetchAndRenderTools = async () => {
+            toolsList.innerHTML = '<p class="text-center text-gray-500 col-span-full">Loading tools...</p>';
             try {
-                const querySnapshot = await getDocs(collection(db, "faqs"));
-                container.innerHTML = '';
+                const querySnapshot = await getDocs(collection(db, "tools"));
                 if (querySnapshot.empty) {
-                    container.innerHTML = '<p class="text-center text-gray-500">No FAQs available yet.</p>';
+                    toolsList.innerHTML = '<p class="text-center text-gray-500 col-span-full">No tools available yet.</p>';
                     return;
                 }
+                let toolsHtml = '';
                 querySnapshot.forEach((doc) => {
-                    const faq = doc.data();
-                    const faqItem = `
-                        <div class="bg-white rounded-lg shadow-sm p-5">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">${faq.question}</h3>
-                            <p class="text-gray-700">${faq.answer}</p>
+                    const tool = doc.data();
+                    toolsHtml += `
+                        <div class="card">
+                            <img src="${tool.image}" alt="${tool.name}">
+                            <h3 class="text-xl font-semibold mb-2">${tool.name}</h3>
+                            <p class="text-gray-600 mb-4">${tool.description}</p>
+                            <a href="${tool.link}" target="_blank" class="text-blue-500 hover:underline font-medium">Learn More &rarr;</a>
                         </div>
                     `;
-                    container.insertAdjacentHTML('beforeend', faqItem);
                 });
+                toolsList.innerHTML = toolsHtml;
             } catch (error) {
-                console.error("Error fetching FAQs:", error);
-                container.innerHTML = '<p class="text-center text-red-500">Failed to load FAQs. Please try again later.</p>';
+                console.error("Error fetching tools:", error);
+                toolsList.innerHTML = '<p class="text-center text-red-500 col-span-full">Error loading tools.</p>';
             }
-        }
+        };
 
-        async function fetchAndRenderTestimonials() {
-            const container = document.getElementById('testimonials-container');
-            container.innerHTML = '<p class="text-center col-span-full text-gray-500">Loading testimonials...</p>';
+        // Fetch and Render Testimonials
+        const fetchAndRenderTestimonials = async () => {
+            testimonialsList.innerHTML = '<p class="text-center text-gray-300 col-span-full">Loading testimonials...</p>';
             try {
                 const querySnapshot = await getDocs(collection(db, "testimonials"));
-                container.innerHTML = '';
                 if (querySnapshot.empty) {
-                    container.innerHTML = '<p class="text-center col-span-full text-gray-500">No testimonials available yet.</p>';
+                    testimonialsList.innerHTML = '<p class="text-center text-gray-300 col-span-full">No testimonials available yet.</p>';
                     return;
                 }
+                let testimonialsHtml = '';
                 querySnapshot.forEach((doc) => {
                     const testimonial = doc.data();
-                    const testimonialCard = `
-                        <div class="bg-white rounded-lg shadow-sm p-6">
-                            <p class="text-gray-700 text-lg italic mb-4">"${testimonial.quote}"</p>
-                            <p class="font-semibold text-gray-900 text-right">- ${testimonial.name}</p>
+                    testimonialsHtml += `
+                        <div class="testimonial-card bg-white text-gray-800 p-6 rounded-lg shadow-md">
+                            ${testimonial.image ? `<img src="${testimonial.image}" alt="${testimonial.author}">` : `<img src="https://via.placeholder.com/96x96?text=User" alt="Placeholder" class="rounded-full w-24 h-24 object-cover mb-4 border-4 border-blue-500">`}
+                            <p class="italic text-lg mb-4">"${testimonial.quote}"</p>
+                            <p class="font-semibold text-blue-600">- ${testimonial.author}</p>
+                            ${testimonial.title ? `<p class="text-sm text-gray-500">${testimonial.title}</p>` : ''}
                         </div>
                     `;
-                    container.insertAdjacentHTML('beforeend', testimonialCard);
                 });
+                testimonialsList.innerHTML = testimonialsHtml;
             } catch (error) {
                 console.error("Error fetching testimonials:", error);
-                container.innerHTML = '<p class="text-center col-span-full text-red-500">Failed to load testimonials. Please try again later.</p>';
+                testimonialsList.innerHTML = '<p class="text-center text-red-300 col-span-full">Error loading testimonials.</p>';
             }
-        }
+        };
 
-        async function fetchAndRenderAboutUs() {
-            const missionP = document.querySelector('#about-mission p');
-            const storyP = document.querySelector('#about-story p');
-            const teamContainer = document.getElementById('team-container');
-            teamContainer.innerHTML = '<p class="text-center col-span-full text-gray-500">Loading team...</p>';
-
+        // Fetch and Render FAQs
+        const fetchAndRenderFAQs = async () => {
+            faqsList.innerHTML = '<p class="text-center text-gray-500">Loading FAQs...</p>';
             try {
-                const docRef = doc(db, "about", "companyInfo");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const aboutData = docSnap.data();
-                    missionP.textContent = aboutData.mission || 'Our mission is currently unavailable.';
-                    storyP.textContent = aboutData.story || 'Our story is currently unavailable.';
-
-                    teamContainer.innerHTML = ''; // Clear loading message
-                    if (aboutData.team && aboutData.team.length > 0) {
-                        aboutData.team.forEach(member => {
-                            const teamMemberCard = `
-                                <div class="text-center">
-                                    <img src="${member.image || '/placeholder-avatar.png'}" alt="${member.name}" class="w-28 h-28 rounded-full mx-auto mb-3 object-cover shadow-md">
-                                    <h4 class="font-semibold text-gray-900">${member.name}</h4>
-                                    <p class="text-sm text-gray-600">${member.role}</p>
-                                </div>
-                            `;
-                            teamContainer.insertAdjacentHTML('beforeend', teamMemberCard);
-                        });
-                    } else {
-                        teamContainer.innerHTML = '<p class="text-center col-span-full text-gray-500">No team members listed yet.</p>';
-                    }
-                } else {
-                    missionP.textContent = 'About mission not found.';
-                    storyP.textContent = 'About story not found.';
-                    teamContainer.innerHTML = '<p class="text-center col-span-full text-gray-500">About Us data not found.</p>';
+                const querySnapshot = await getDocs(collection(db, "faqs"));
+                if (querySnapshot.empty) {
+                    faqsList.innerHTML = '<p class="text-center text-gray-500">No FAQs available yet.</p>';
+                    return;
                 }
+                let faqsHtml = '';
+                querySnapshot.forEach((doc) => {
+                    const faq = doc.data();
+                    faqsHtml += `
+                        <div class="bg-white rounded-lg shadow-sm p-5">
+                            <h3 class="text-lg font-semibold mb-2">${faq.question}</h3>
+                            <p class="text-gray-600">${faq.answer}</p>
+                        </div>
+                    `;
+                });
+                faqsList.innerHTML = faqsHtml;
             } catch (error) {
-                console.error("Error fetching about us data:", error);
-                missionP.textContent = 'Failed to load mission.';
-                storyP.textContent = 'Failed to load story.';
-                teamContainer.innerHTML = '<p class="text-center col-span-full text-red-500">Failed to load team data.</p>';
+                console.error("Error fetching FAQs:", error);
+                faqsList.innerHTML = '<p class="text-center text-red-500">Error loading FAQs.</p>';
             }
-        }
+        };
 
-        async function fetchAndRenderContactInfo() {
-            const emailSpan = document.getElementById('contact-email');
-            const phoneSpan = document.getElementById('contact-phone');
-            const addressSpan = document.getElementById('contact-address');
-            const socialLinksDiv = document.getElementById('social-links');
-            socialLinksDiv.innerHTML = ''; // Clear previous links
-
+        // Fetch and Render Contact Info
+        const fetchAndRenderContactInfo = async () => {
+            const contactInfoDocRef = doc(db, "settings", "contactInfo");
             try {
-                const docRef = doc(db, "contactInfo", "main");
-                const docSnap = await getDoc(docRef);
+                const docSnap = await getDoc(contactInfoDocRef);
                 if (docSnap.exists()) {
-                    const contactData = docSnap.data();
-                    emailSpan.textContent = contactData.email || 'N/A';
-                    phoneSpan.textContent = contactData.phone || 'N/A';
-                    addressSpan.textContent = contactData.address || 'N/A';
-
-                    if (contactData.socials) {
-                        for (const platform in contactData.socials) {
-                            if (contactData.socials[platform]) {
-                                const link = document.createElement('a');
-                                link.href = contactData.socials[platform];
-                                link.target = "_blank";
-                                link.className = "text-blue-600 hover:text-blue-800 text-xl";
-                                // A simple icon for example, consider using Font Awesome or SVG for production
-                                link.innerHTML = `<i class="fab fa-${platform}"></i> ${platform.charAt(0).toUpperCase() + platform.slice(1)}`;
-                                socialLinksDiv.appendChild(link);
-                            }
-                        }
-                    }
+                    const data = docSnap.data();
+                    contactPhone.textContent = data.phone || 'N/A';
+                    contactEmail.textContent = data.email || 'N/A';
+                    contactAddress.textContent = data.address || 'N/A';
                 } else {
-                    emailSpan.textContent = 'Not set';
-                    phoneSpan.textContent = 'Not set';
-                    addressSpan.textContent = 'Not set';
-                    socialLinksDiv.innerHTML = '<p class="text-gray-500 text-sm">No social links set.</p>';
+                    contactPhone.textContent = 'N/A';
+                    contactEmail.textContent = 'N/A';
+                    contactAddress.textContent = 'N/A';
+                    console.log("No contactInfo document found in settings.");
                 }
             } catch (error) {
                 console.error("Error fetching contact info:", error);
-                emailSpan.textContent = 'Error';
-                phoneSpan.textContent = 'Error';
-                addressSpan.textContent = 'Error';
-                socialLinksDiv.innerHTML = '<p class="text-red-500 text-sm">Failed to load contact info.</p>';
+                contactPhone.textContent = 'Error';
+                contactEmail.textContent = 'Error';
+                contactAddress.textContent = 'Error';
             }
+        };
+
+        // --- Form Submissions ---
+
+        // Contact Form Submission
+        if (contactForm) {
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submission = {
+                    name: contactForm['contact-name'].value,
+                    email: contactForm['contact-email-form'].value, // Note: ID changed to avoid conflict with contact info display
+                    subject: contactForm['contact-subject'].value,
+                    message: contactForm['contact-message'].value,
+                    timestamp: new Date(),
+                };
+                try {
+                    await addDoc(collection(db, "contactSubmissions"), submission);
+                    alert('Your message has been sent successfully!');
+                    contactForm.reset();
+                } catch (error) {
+                    console.error('Failed to send message:', error);
+                    alert('Failed to send message. Please try again later.');
+                }
+            });
         }
 
-        // --- Form Submission Logic ---
+        // Newsletter Form Submission
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const subscription = {
+                    email: newsletterForm['email'].value,
+                    timestamp: new Date(),
+                };
+                try {
+                    await addDoc(collection(db, "newsletterSubscriptions"), subscription);
+                    alert('Successfully subscribed to our newsletter!');
+                    newsletterForm.reset();
+                } catch (error) {
+                    console.error('Failed to subscribe:', error);
+                    alert('Failed to subscribe. Please try again later.');
+                }
+            });
+        }
 
-        // Contact Form
-        const contactForm = document.getElementById('contact-form');
-        const contactFormMessage = document.getElementById('contact-form-message');
-        contactForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            contactFormMessage.textContent = '';
-            contactFormMessage.className = 'mt-3 text-sm text-center';
-
-            const name = document.getElementById('contact-name').value;
-            const email = document.getElementById('contact-email-form').value;
-            const message = document.getElementById('contact-message').value;
-
-            if (!name || !email || !message) {
-                contactFormMessage.textContent = 'Please fill in all fields.';
-                contactFormMessage.classList.add('text-red-500');
-                return;
-            }
-
-            try {
-                await addDoc(collection(db, "contactSubmissions"), {
-                    name,
-                    email,
-                    message,
-                    timestamp: serverTimestamp() // Firestore's server timestamp
-                });
-                contactFormMessage.textContent = 'Your message has been sent successfully!';
-                contactFormMessage.classList.add('text-green-600');
-                contactForm.reset();
-            } catch (error) {
-                console.error("Error submitting contact form:", error);
-                contactFormMessage.textContent = `Failed to send message: ${error.message}`;
-                contactFormMessage.classList.add('text-red-500');
-            }
-        });
-
-        // Newsletter Form
-        const newsletterForm = document.getElementById('newsletter-form');
-        const newsletterFormMessage = document.getElementById('newsletter-form-message');
-        newsletterForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            newsletterFormMessage.textContent = '';
-            newsletterFormMessage.className = 'mt-3 text-sm text-center';
-
-            const email = document.getElementById('newsletter-email').value;
-
-            if (!email) {
-                newsletterFormMessage.textContent = 'Please enter your email.';
-                newsletterFormMessage.classList.add('text-red-500');
-                return;
-            }
-
-            try {
-                await addDoc(collection(db, "newsletterSubscriptions"), {
-                    email,
-                    timestamp: serverTimestamp()
-                });
-                newsletterFormMessage.textContent = 'Thank you for subscribing!';
-                newsletterFormMessage.classList.add('text-green-600');
-                newsletterForm.reset();
-            } catch (error) {
-                console.error("Error subscribing to newsletter:", error);
-                newsletterFormMessage.textContent = `Subscription failed: ${error.message}`;
-                newsletterFormMessage.classList.add('text-red-500');
-            }
-        });
-
-        // Initial Load of all dynamic content
+        // --- Initial Data Load ---
         document.addEventListener('DOMContentLoaded', () => {
             fetchAndRenderAnnouncement();
-            fetchAndRenderTools();
+            fetchAndRenderAbout();
             fetchAndRenderFeatures();
-            fetchAndRenderFAQs();
+            fetchAndRenderTools();
             fetchAndRenderTestimonials();
-            fetchAndRenderAboutUs();
+            fetchAndRenderFAQs();
             fetchAndRenderContactInfo();
         });
-
     </script>
 </body>
-    </html>
+                                                                                                                                                                                                                                   </html>
